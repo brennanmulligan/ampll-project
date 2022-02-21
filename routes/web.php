@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserLogin;
 /*
@@ -20,3 +21,5 @@ Route::get('/', function () {
 Route::get('auth_response',[UserLogin::class,'response']);
 
 Route::view('login','auth');
+
+Route::get('user_data', [UserController::class,'getData']);
