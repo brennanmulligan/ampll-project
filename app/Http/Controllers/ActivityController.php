@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\DB;
 class ActivityController extends Controller
 {
     public function getActivityData($userID) {
-        $activityData = DB::Select("SELECT * FROM user_activity_data WHERE userID = $userID");
-
-        return $activityData;
+        return DB::table("athlete")
+            ->select("*")
+            ->where("userID", "=", $userID)
+            ->get();
     }
 }
