@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('athlete', function (Blueprint $table) {
-            $table->string('athlete_id')->unique();
+            $table->string('ID')->unique();
             $table->string('username')->unique();
-            $table->string('firstname')->nullable();
-            $table->string('lastname')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('country')->nullable();
