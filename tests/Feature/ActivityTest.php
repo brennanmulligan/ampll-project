@@ -15,6 +15,12 @@ class ActivityTest extends TestCase
      */
     public function test_example()
     {
+        /*
+         * <?php
+         *      $a = array("Volvo" => "XC90", "BMW" => "X5", "Toyota" => "Highlander");
+         *      print_r(array_keys($a));
+         *  ?>
+         */
         $num = 40;
 
         self::assertEquals($num, 41, "Test FAILED");
