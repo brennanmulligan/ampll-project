@@ -12,6 +12,7 @@ class AthleteController extends Controller
     {
         return DB::table('athlete')
             ->select("*")
+            ->where('athlete_id', '=', $athlete_id)
             ->get();
     }
 
