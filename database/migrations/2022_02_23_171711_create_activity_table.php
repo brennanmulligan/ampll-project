@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('activity', function (Blueprint $table) {
             $table->string('activity_id')->unique();
-            $table->foreign('athlete_id')->references('athlete_id')->on('athlete')->onDelete('cascade');
+            $table->string('athlete_id');
             $table->string('name')->nullable();
             $table->string('type')->nullable();
             $table->integer('elapsed_time')->nullable();
@@ -26,6 +26,9 @@ return new class extends Migration
             $table->integer('utc_offset')->nullable();
             $table->integer('kudos_count')->nullable();
             $table->timestamps();
+
+            // Declare our foreign key
+            $table->foreign('athlete_id')->references('athlete_id')->on('athlete')->onDelete('cascade');
         });
     }
 
