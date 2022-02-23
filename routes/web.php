@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AthleteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserLogin;
 /*
@@ -22,4 +22,4 @@ Route::get('auth_response',[UserLogin::class,'response']);
 
 Route::view('login','auth');
 
-Route::get('user_data', [UserController::class,'getData']);
+Route::get('user_data', [AthleteController::class,'getData']);
