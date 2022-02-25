@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\ActivityController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,14 +16,12 @@ class ActivityTest extends TestCase
      */
     public function test_example()
     {
-        /*
-         * <?php
-         *      $a = array("Volvo" => "XC90", "BMW" => "X5", "Toyota" => "Highlander");
-         *      print_r(array_keys($a));
-         *  ?>
-         */
-        $num = 40;
+        $activityController = new ActivityController();
 
-        self::assertEquals($num, 41, "Test FAILED");
+        $athlete = $activityController->getAllActivityData('69703678988889');
+
+        self::assertNotEmpty($athlete);
+
+        self::assertEquals(69703678988889, $athlete[0]->athlete_id);
     }
 }
