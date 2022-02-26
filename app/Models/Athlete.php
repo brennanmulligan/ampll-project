@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Athlete extends Model
 {
-    use HasFactory;
+    protected $table = "athlete";
     use HasFactory;
 
     /**
