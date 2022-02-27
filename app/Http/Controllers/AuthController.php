@@ -11,4 +11,11 @@ class AuthController extends Controller
         return Auth::where("athlete_id", "=", $athlete_id)
             ->get();
     }
+    //stores tokens into the DB based on an athlete id
+    public function storeTokens($athlete_id, $access_token, $refresh_token) {
+        Auth::updateOrInsert(
+                ['athlete_id' => $athlete_id],
+                ['access_token' => $access_token, 'refresh_token' => $refresh_token]
+            );
+    }
 }
