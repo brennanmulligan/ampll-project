@@ -14,7 +14,7 @@ class ActivityTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_dataInDatabase()
     {
         $activityController = new ActivityController();
 
