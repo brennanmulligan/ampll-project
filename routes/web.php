@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\GatewayController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserLogin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('auth_response',[UserLogin::class,'response']);
+Route::get('auth_response',[GatewayController::class,'login']);
 
 Route::view('login','auth');

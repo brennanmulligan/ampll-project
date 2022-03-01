@@ -13,16 +13,18 @@ class AthleteController extends Controller
         return DB::table('athlete')
             ->select("*")
             ->where('athlete_id', '=', $athlete_id)
-            ->get();
+            ->first();
     }
 
 
-    public function addOrUpdate(string $athlete_id, $username, $firstname, $lastname, $city, $state, $country, $sex)
+    public function addOrUpdate($athlete)
     {
         DB::table('athlete')
             ->updateOrInsert(
-                ['athlete_id' => $athlete_id],
-                ['username' => $username, 'firstname' => $firstname, 'lastname' => $lastname, 'city' => $city, 'state' => $state, 'country' => $country, 'sex' => $sex]
+                ['athlete_id' => $athlete->getId()],
+                ['username' => $athlete->getUsername(), 'first_name' => $athlete->getFirstName(),
+                    'last_name' => $athlete->getLastname(), 'city' => $athlete->getCity(),
+                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()]
             );
     }
 }
