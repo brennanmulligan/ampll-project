@@ -2,32 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Athlete;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class AthleteController extends Controller
 {
-    function getData()
+    /**
+     * Get's an athlete's DB entry based on their ID
+     * @param string $athlete_id
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function getAthlete(string $athlete_id)
     {
-        $authToken = 'Bearer d5ca84d5e6912ec1eca000e93122ddd1225d9872';
-        $userData = Http::withHeaders(['Authorization' => $authToken])->
-            get('https://www.strava.com/api/v3/athlete');
-        $decodedUserData = json_decode($userData, false);
-        $userID = $decodedUserData->id;
-        echo $userID . '<br>';
-        $username = $decodedUserData->username;
-        echo $username . '<br>';
-        $firstName = $decodedUserData->firstname;
-        echo $firstName . '<br>';
-        $lastName = $decodedUserData->lastname;
-        echo $lastName . '<br>';
-        $city = $decodedUserData->city;
-        echo $city . '<br>';
-        $state = $decodedUserData->state;
-        echo $state . '<br>';
-        $country = $decodedUserData->country;
-        echo $country . '<br>';
-        $sex = $decodedUserData->sex;
-        echo $sex . '<br>';
+        return DB::table('athlete')
+            ->select("*")
+            ->where('athlete_id', '=', $athlete_id)
+            ->first();
+    }
+
+    /**
+     * Pulls all athletes from the DB
+     * @return All athletes from database
+     */
+    public function getAllAthletes()
+    {
+        return DB::table('athlete')
+            ->select("*")
+            ->get();
+    }
+
+    /**
+     * takes an athlete object and uses all of it's pieces to store it into the DB
+     * @param $athlete
+     * @return void
+     */
+    public function addOrUpdate($athlete)
+    {
+        DB::table('athlete')
+            ->updateOrInsert(
+                ['athlete_id' => $athlete->getId()],
+                ['username' => $athlete->getUsername(), 'first_name' => $athlete->getFirstName(),
+                    'last_name' => $athlete->getLastname(), 'city' => $athlete->getCity(),
+                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()]
+            );
     }
 }

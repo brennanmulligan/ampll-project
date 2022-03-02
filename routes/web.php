@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\AthleteController;
+use App\Http\Controllers\GatewayController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserLogin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,11 +14,13 @@ use App\Http\Controllers\UserLogin;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('interface');
 });
 
-Route::get('auth_response',[UserLogin::class,'response']);
+Route::get('auth_response',[GatewayController::class,'login']);
 
-Route::view('login','auth');
+Route::view('login','auth')->name('login');
 
-Route::get('user_data', [AthleteController::class,'getData']);
+Route::view('ui', 'interface');
+
+Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
