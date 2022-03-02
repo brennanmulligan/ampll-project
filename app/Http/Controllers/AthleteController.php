@@ -22,6 +22,17 @@ class AthleteController extends Controller
     }
 
     /**
+     * Pulls all athletes from the DB
+     * @return All athletes from database
+     */
+    public function getAllAthletes()
+    {
+        return DB::table('athlete')
+            ->select("*")
+            ->get();
+    }
+
+    /**
      * takes an athlete object and uses all of it's pieces to store it into the DB
      * @param $athlete
      * @return void

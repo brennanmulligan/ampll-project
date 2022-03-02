@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\JsonParser;
 use App\Objects\Athlete;
 use http\Header\Parser;
+use Illuminate\Http\RedirectResponse;
 
 class GatewayController extends Controller
 {
     /**
      * Function to register a user and add their information to the database
-     * @return void
+     * @return RedirectResponse
      */
-    function login()
+    function login(): RedirectResponse
     {
         $apiController = new StravaAPIController();
         $parser = new JsonParser();
@@ -29,6 +30,7 @@ class GatewayController extends Controller
         $authController->storeTokens($authData);
 
         $this->storeActivitiesData($athlete->getId());
+        return redirect('ui');
     }
 
     /**
