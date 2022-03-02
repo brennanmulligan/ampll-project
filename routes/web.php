@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\GatewayController;
-use App\Http\Middleware\JsonParser;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +20,7 @@ Route::get('/', function () {
 Route::get('auth_response',[GatewayController::class,'login']);
 
 Route::view('login','auth');
+
+Route::view('ui', 'interface');
 
 Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
