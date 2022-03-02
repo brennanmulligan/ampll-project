@@ -22,7 +22,7 @@ class ActivityData extends Seeder
             'type' => 'Walking',
             'elapsed_time' => 18373,
             'distance' => 2026.43,
-            'total_elevation_game' => 346,
+            'total_elevation_gain' => 346,
             'start_date' => '2022-02-15T18:02:13Z',
             'start_date_local' => '2022-02-15T18:02:13Z',
             'utc_offset' => -28800,
