@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StravaAPIController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('auth_response',[UserLogin::class,'response']);
+
+Route::view('login','auth');
+
+// Routes to pull data from strava using their API
+Route::get('user_data', [StravaAPIController::class,'getUserData']);
+Route::get('activities_data', [StravaAPIController::class,'getActivitiesData']);

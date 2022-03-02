@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->integer('elapsed_time')->nullable();
             $table->float('distance')->nullable();
-            $table->integer('total_elevation_game')->nullable();
+            $table->integer('total_elevation_gain')->nullable();
             $table->string('start_date')->nullable();
             $table->string('start_date_local')->nullable();
             $table->integer('utc_offset')->nullable();

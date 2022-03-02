@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class AthleteController extends Controller
 {
+    /**
+     * Get's an athlete's DB entry based on their ID
+     * @param string $athlete_id
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     */
     public function getAthlete(string $athlete_id)
     {
         return DB::table('athlete')
@@ -16,7 +21,11 @@ class AthleteController extends Controller
             ->first();
     }
 
-
+    /**
+     * takes an athlete object and uses all of it's pieces to store it into the DB
+     * @param $athlete
+     * @return void
+     */
     public function addOrUpdate($athlete)
     {
         DB::table('athlete')
