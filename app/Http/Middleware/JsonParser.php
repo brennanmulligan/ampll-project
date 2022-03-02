@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Objects\Activity;
 use App\Objects\Athlete;
 use App\Objects\AuthorizationData;
+use App\Objects\RefreshData;
 
 Class JsonParser {
     /**
@@ -15,6 +16,15 @@ Class JsonParser {
     function parseAuthorizationData($authorizationData) {
         $athlete = $this->parseAthleteData($authorizationData->athlete);
         return new AuthorizationData($authorizationData->access_token, $authorizationData->refresh_token, $athlete);
+    }
+
+    /**
+     * A function to get the information from specific fields in a decoded JSON object
+     * @param $refreshData A decoded JSON object that we will parse in order to get the data we need to store
+     * @return RefreshData
+     */
+    function parseRefreshData($refreshData) {
+        return new RefreshData($refreshData->access_token, $refreshData->refresh_token);
     }
 
     /**

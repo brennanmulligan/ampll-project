@@ -1,11 +1,21 @@
 <?php
 $activity_controller = new \App\Http\Controllers\ActivityController();
 $athlete_controller = new \App\Http\Controllers\AthleteController();
+if(isset($_GET["refresh"]) && $_GET["id_sel"] != 0) {
+    $gatewayController = new \App\Http\Controllers\GatewayController();
+    if ($gatewayController->refreshData($_GET["id_sel"]) == -1) {
+        header('Location: /login');
+        exit();
+    }
+} else {
+    redirect('ui');
+}
 try{
     $athlete_id = $_GET["id_sel"];
 } catch(ErrorException) {
 $athlete_id = 0; //ID by default
-    }
+}
+
 ?>
 <!DOCTYPE html>
 <head>
@@ -38,6 +48,12 @@ $athlete_id = 0; //ID by default
 </select>
     <input type="submit">
 </form>
+
+<br>
+
+<a href='ui?id_sel=<?php echo $athlete_id ?>&refresh=Refresh'>
+    <button>Refresh</button>
+</a>
 
 <br>
 <h2>Activities Stored for User</h2>

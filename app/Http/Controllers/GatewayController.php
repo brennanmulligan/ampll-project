@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\JsonParser;
-use App\Objects\Athlete;
-use http\Header\Parser;
 use Illuminate\Http\RedirectResponse;
 
 class GatewayController extends Controller
@@ -27,46 +25,37 @@ class GatewayController extends Controller
 
         //use the athlete id to store the tokens with their respective athlete in the Auth table
         $authController = new AuthController();
-        $authController->storeTokens($authData);
+        $authController->storeTokens($authData->getAthlete()->getId(), $authData->getAccessToken(), $authData->getRefreshToken());
 
         $this->storeActivitiesData($athlete->getId());
         return redirect('ui');
     }
 
     /**
-     *
-     * @return void
-     */
-    function verifyAuth() {
-
-    }
-
-    /**
      * Gets and Stores the data of an athlete based on a given ID
-     * @param string $athlete_id Athlete information to be retrieved
-     * @return void
+     * @param string $athleteID Athlete information to be retrieved
+     * @return void|int
      */
-    function storeAthleteData(string $athlete_id) {
+    function storeAthleteData(string $athleteID) {
         $stravaAPIController = new StravaAPIController();
-        $athleteData = $stravaAPIController->getAthleteData($athlete_id);
+        $athleteData = $stravaAPIController->getAthleteData($athleteID);
 
         //if the access token fails, it may have expired, and we need a new access token
         if(str_contains(serialize($athleteData), "Authorization Error")) {
-            $decodedResult = $stravaAPIController->refreshAccessToken($athlete_id);
+            $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
 
             //if the refresh token fails, reauthenticate by logging in
-            if(str_contains(serialize($decodedResult), "inside_grant")) {
-                $gatewayController = new GatewayController();
-                $gatewayController->login();
+            if(str_contains(serialize($decodedResult), "Bad Request")) {
+                return -1;
             } else {
                 $jsonParser = new JsonParser();
                 $authController = new AuthController();
 
-                $authData = $jsonParser->parseAuthorizationData($decodedResult);
-                $authController->storeTokens($authData);
+                $refreshData = $jsonParser->parseRefreshData($decodedResult);
+                $authController->storeTokens($athleteID, $refreshData->getAccessToken(), $refreshData->getRefreshToken());
             }
 
-            $athleteData = $stravaAPIController->getAthleteData($athlete_id);
+            $athleteData = $stravaAPIController->getAthleteData($athleteID);
         }
 
         $parser = new JsonParser();
@@ -78,23 +67,49 @@ class GatewayController extends Controller
 
     /**
      * Gets and Stores the data of the last 6 months of activities for an athlete
-     * @param string $athlete_id Athlete information to be retrieved
-     * @return void
+     * @param string $athleteID Athlete information to be retrieved
+     * @return int|void
      */
-    function storeActivitiesData($athlete_id) {
+    function storeActivitiesData($athleteID) {
         $stravaAPIController = new StravaAPIController();
-        $activitiesData = $stravaAPIController->getActivitiesData($athlete_id);
+        $activitiesData = $stravaAPIController->getActivitiesData($athleteID);
 
         //if the access token fails, it may have expired, and we need a new access token
         if(str_contains(serialize($activitiesData), "Authorization Error")) {
-            $stravaAPIController->refreshAccessToken($athlete_id);
-            $activitiesData = $stravaAPIController->getActivitiesData($athlete_id);
+            $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
+
+            //if the refresh token fails, reauthenticate by logging in
+            if(str_contains(serialize($decodedResult), "Bad Request")) {
+                return -1;
+            } else {
+                $jsonParser = new JsonParser();
+                $authController = new AuthController();
+
+                $refreshData = $jsonParser->parseRefreshData($decodedResult);
+                $authController->storeTokens($athleteID, $refreshData->getAccessToken(), $refreshData->getRefreshToken());
+            }
+
+            $activitiesData = $stravaAPIController->getActivitiesData($athleteID);
         }
 
         $parser = new JsonParser();
         $activities = $parser->parseActivitiesData($activitiesData);
 
         $activitiesController = new ActivityController();
-        $activitiesController->storeActivities($athlete_id, $activities);
+        $activitiesController->storeActivities($athleteID, $activities);
+    }
+
+    /**
+     * Refreshes the data in the database for both Athlete and activities
+     * @return int|void A -1 return value is an unauthorized athlete
+     */
+    function refreshData($athleteID)
+    {
+        if ($this->storeAthleteData($athleteID) == -1) {
+            return -1;
+        }
+        if ($this->storeActivitiesData($athleteID) == -1) {
+            return -1;
+        }
     }
 }
