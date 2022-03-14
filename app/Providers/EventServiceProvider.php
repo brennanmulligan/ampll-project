@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
+use App\Events\ActivityEvent;
+use App\Events\AthleteEvent;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -16,8 +18,18 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
-            SendEmailVerificationNotification::class,
+            SendEmailVerificationNotification::class
         ],
+        ActivityEvent::class => [
+            CreateActivity::class,
+            DeleteActivity::class,
+            UpdateActivityTitle::class,
+            UpdateActivityType::class,
+            UpdateActivityPrivacy::class,
+        ],
+        AthleteEvent::class => [
+            UpdateAthleteAuthRevoked::class
+        ]
     ];
 
     /**
