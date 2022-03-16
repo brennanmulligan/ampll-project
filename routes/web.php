@@ -13,14 +13,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Gets
 Route::get('/', function () {
     return view('interface');
 });
 
 Route::get('auth_response',[GatewayController::class,'login']);
 
+Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
+
+// Views
 Route::view('login','auth')->name('login');
 
 Route::view('ui', 'interface');
 
-Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
+// Posts
+Route::post('webhook', 'App\Http\Controllers\WebhookController@handle');
+
