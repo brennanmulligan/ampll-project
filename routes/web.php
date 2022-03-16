@@ -15,12 +15,18 @@ use Illuminate\Support\Facades\Route;
 
 // Gets
 Route::get('/', function () {
-    return view('interface');
+    return view('welcome');
 });
 
 Route::get('auth_response',[GatewayController::class,'login']);
 
 Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
+
+Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
+
+Route::get('calendar/',function() {
+    return view('calendar');
+});
 
 // Views
 Route::view('login','auth')->name('login');
