@@ -20,7 +20,6 @@ class AuthTest extends TestCase
      *
      * @return void
      */
-    /*
     public function testAuthEntryExists()
     {
         $auth_controller = new AuthController();
@@ -41,5 +40,4 @@ class AuthTest extends TestCase
         self::assertNotNull($auth->access_token);
         self::assertNotNull($auth->refresh_token);
     }
-    */
 }
