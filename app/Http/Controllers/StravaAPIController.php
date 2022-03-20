@@ -92,4 +92,26 @@ class StravaAPIController extends Controller
         //get result of curl request
         return curl_exec($ch);
     }
+
+    /**
+     * @param string $athleteID the id for the athlete we want to get data on
+     * @param $oldTime int the time since we last pulled a user's activity data
+     * @return mixed the activities from an athlete after a given time to the current time
+     */
+    function getNewActivitiesData(string $athleteID, int $oldTime): mixed {
+        //this is in epoch time (time since the epoch in seconds)
+        $currentTime = time();
+        //very close estimate to how long 6 months is in seconds
+        $authController = new AuthController();
+        $accessToken = ($authController->getAuthTokens($athleteID))->access_token;
+        $accessToken = 'Bearer ' . $accessToken;
+        /* have old time commented out to see all activities since none of us have any
+         * activities in recent months for testing purposes
+         */
+        //180 as the per_page because we are doing 6 months of data. assume that there is max of 1 activity/day for now
+        $activityData = Http::withHeaders(['Authorization' => $accessToken])->
+        get('https://www.strava.com/api/v3/athlete/activities?before=' . $currentTime . '&after=' . $oldTime .
+            '&per_page=' . 180);
+        return json_decode($activityData, false);
+    }
 }

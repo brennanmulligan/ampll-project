@@ -34,7 +34,7 @@ Class JsonParser {
      */
     function parseAthleteData(mixed $athleteData) {
         return new Athlete($athleteData->id, $athleteData->username, $athleteData->firstname, $athleteData->lastname,
-            $athleteData->city, $athleteData->state, $athleteData->country, $athleteData->sex);
+            $athleteData->city, $athleteData->state, $athleteData->country, $athleteData->sex, $athleteData->updated_at);
     }
 
     /**
