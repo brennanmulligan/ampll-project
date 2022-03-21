@@ -27,7 +27,11 @@ class AuthController extends Controller
     public function storeTokens($athleteID, $accessToken, $refreshToken) {
         Auth::updateOrCreate(
                 ['athlete_id' => $athleteID],
-                ['access_token' => $accessToken, 'refresh_token' => $refreshToken]
+                ['access_token' => $accessToken, 'refresh_token' => $refreshToken, 'valid' => 1]
             );
+    }
+
+    public function setInvalid($athleteID) {
+        Auth::where('athlete_id', $athleteID)->update(['valid' => -1]);
     }
 }

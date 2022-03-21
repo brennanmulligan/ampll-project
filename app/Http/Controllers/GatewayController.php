@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\JsonParser;
+use App\Models\Auth;
 use Illuminate\Http\RedirectResponse;
 
 class GatewayController extends Controller
@@ -106,9 +107,13 @@ class GatewayController extends Controller
     function refreshData($athleteID)
     {
         if ($this->storeAthleteData($athleteID) == -1) {
+            $authController = new AuthController();
+            $authController->setInvalid($athleteID);
             return -1;
         }
         if ($this->storeActivitiesData($athleteID) == -1) {
+            $authController = new AuthController();
+            $authController->setInvalid($athleteID);
             return -1;
         }
     }
