@@ -29,5 +29,11 @@ class ActivityController extends Controller
                     'utc_offset' => $activity->getUTCOffset(), 'kudos_count' => $activity->getKudosCount()]
             );
         }
+        //when we make changes to an athlete's activities, we also want to update the athlete's refreshed_at var
+        DB::table('athlete')
+            ->updateOrInsert(
+                ['athlete_id' => $athleteID],
+                ['refreshed_at' => time()]
+            );
     }
 }

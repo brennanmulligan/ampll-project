@@ -44,7 +44,8 @@ class AthleteController extends Controller
                 ['athlete_id' => $athlete->getId()],
                 ['username' => $athlete->getUsername(), 'first_name' => $athlete->getFirstName(),
                     'last_name' => $athlete->getLastname(), 'city' => $athlete->getCity(),
-                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()]
+                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()/*,
+                    'updated_at' => $athlete->getUpdatedAt()*/]
             );
     }
 }
