@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('athlete_id')->primary();
             $table->string('refresh_token');
             $table->string('access_token');
+            $table->integer('valid')->default(1);
             $table->timestamps();
 
 
