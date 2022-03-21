@@ -28,6 +28,8 @@ Route::get('calendar/',function() {
     return view('calendar');
 });
 
+Route::get('webhook', 'App\Http\Controllers\WebhookController@validate_subscription');
+
 // Views
 Route::view('login','auth')->name('login');
 
