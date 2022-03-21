@@ -25,7 +25,7 @@ class AuthController extends Controller
      * @return void
      */
     public function storeTokens($athleteID, $accessToken, $refreshToken) {
-        Auth::updateOrInsert(
+        Auth::updateOrCreate(
                 ['athlete_id' => $athleteID],
                 ['access_token' => $accessToken, 'refresh_token' => $refreshToken]
             );
