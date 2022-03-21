@@ -23,7 +23,7 @@ class AthleteController extends Controller
 
     /**
      * Pulls all athletes from the DB
-     * @return All athletes from database
+     * @return \Illuminate\Support\Collection athletes from database
      */
     public function getAllAthletes()
     {
@@ -39,13 +39,11 @@ class AthleteController extends Controller
      */
     public function addOrUpdate($athlete)
     {
-        DB::table('athlete')
-            ->updateOrInsert(
+        Athlete::updateOrCreate(
                 ['athlete_id' => $athlete->getId()],
                 ['username' => $athlete->getUsername(), 'first_name' => $athlete->getFirstName(),
                     'last_name' => $athlete->getLastname(), 'city' => $athlete->getCity(),
-                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()/*,
-                    'updated_at' => $athlete->getUpdatedAt()*/]
+                    'state' => $athlete->getState(), 'country' => $athlete->getCountry(), 'sex' => $athlete->getSex()]
             );
     }
 }

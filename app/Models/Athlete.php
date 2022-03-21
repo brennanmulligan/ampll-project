@@ -16,7 +16,7 @@ class Athlete extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'ID',
+        'athlete_id',
         'username',
         'first_name',
         'last_name',

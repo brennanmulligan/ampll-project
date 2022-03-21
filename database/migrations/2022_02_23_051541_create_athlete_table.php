@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->char('sex')->nullable();
+            $table->integer('refreshed_at')->nullable();
             $table->timestamps();
         });
     }

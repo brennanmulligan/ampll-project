@@ -13,4 +13,10 @@ class Auth extends Model
 {
     protected $table = "auth";
     use HasFactory;
+
+    protected $fillable = [
+        'athlete_id',
+        'refresh_token',
+        'access_token'
+    ];
 }

@@ -20,7 +20,7 @@ class ActivityController extends Controller
      */
     public function storeActivities($athleteID, $activities) {
         foreach($activities as $activity) {
-            Activity::updateOrInsert(
+            Activity::updateOrCreate(
                 ['activity_id' => $activity->getId()],
                 ['athlete_id' => $athleteID, 'name' => $activity->getName(), 'type' => $activity->getType(),
                     'elapsed_time' => $activity->getElapsedTime(), 'distance' => $activity->getDistance(),

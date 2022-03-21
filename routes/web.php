@@ -13,18 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Gets
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('auth_response',[GatewayController::class,'login']);
 
-Route::view('login','auth')->name('login');
-
-Route::view('ui', 'interface');
+Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
 
 Route::get('test/{athleteID}', [\App\Http\Controllers\StravaAPIController::class, 'getActivitiesData']);
 
 Route::get('calendar/',function() {
     return view('calendar');
 });
+
+Route::get('webhook', 'App\Http\Controllers\WebhookController@validate_subscription');
+
+// Views
+Route::view('login','auth')->name('login');
+
+Route::view('ui', 'interface');
+
+// Posts
+Route::post('webhook', 'App\Http\Controllers\WebhookController@handle');
+

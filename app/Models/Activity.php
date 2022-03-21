@@ -14,4 +14,18 @@ class Activity extends Model
     protected $table = 'activity';
 
     use HasFactory;
+
+    protected $fillable = [
+        'activity_id',
+        'athlete_id',
+        'name',
+        'type',
+        'elapsed_time',
+        'distance',
+        'total_elevation_gain',
+        'start_date',
+        'start_date_local',
+        'utc_offset',
+        'kudos_count'
+    ];
 }
