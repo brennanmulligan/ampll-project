@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Activity extends Model
 {
     protected $table = 'activity';
-    protected $primaryKey = "activity_id";
+    protected $primaryKey = 'activity_id';
 
     use HasFactory;
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\JsonParser;
+use App\Models\Auth;
 use Illuminate\Http\RedirectResponse;
 
 class GatewayController extends Controller
@@ -45,7 +46,8 @@ class GatewayController extends Controller
             $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
 
             //if the refresh token fails, reauthenticate by logging in
-            if(str_contains(serialize($decodedResult), "Bad Request")) {
+            // if it is -1 it was invalid in the database
+            if($decodedResult == -1 || str_contains(serialize($decodedResult), "Bad Request")) {
                 return -1;
             } else {
                 $jsonParser = new JsonParser();
@@ -79,7 +81,8 @@ class GatewayController extends Controller
             $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
 
             //if the refresh token fails, reauthenticate by logging in
-            if(str_contains(serialize($decodedResult), "Bad Request")) {
+            // if it is -1 it was invalid in the database
+            if($decodedResult == -1 || str_contains(serialize($decodedResult), "Bad Request")) {
                 return -1;
             } else {
                 $jsonParser = new JsonParser();
@@ -106,9 +109,13 @@ class GatewayController extends Controller
     function refreshData($athleteID)
     {
         if ($this->storeAthleteData($athleteID) == -1) {
+            $authController = new AuthController();
+            $authController->setInvalid($athleteID);
             return -1;
         }
         if ($this->storeActivitiesData($athleteID) == -1) {
+            $authController = new AuthController();
+            $authController->setInvalid($athleteID);
             return -1;
         }
     }
