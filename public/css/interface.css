@@ -1,0 +1,65 @@
+body {
+    background-color: #1D3C49;
+    font-family: 'Nunito', sans-serif;
+}
+
+h1, h2 {
+    color: #2ee3b0;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+#output_table td, #output_table th {
+    border: 1px solid #ECECE6;
+    padding: 5px;
+}
+
+#backLink {
+    color: #93e2f9;
+    text-decoration: none;
+}
+
+p, button,
+.cell,
+#header {
+    color: #ECECE6;
+}
+
+input[type="submit"], button {
+    background-color: #33a988;
+    color: black;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.2s ease-out;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #24725c;
+    color: white;
+    transition: all 0.2s ease-in;
+}
+
+select {
+    height: 40px;
+    background-color: #4af1c2;
+    font-weight: bold;
+    font-family: Arial Black, Arial, sans-serif;
+}
+
+.focus {
+    font-family: Arial Black, Arial, sans-serif;
+    font-weight: bold;
+    color: #2ee3b0;
+}
+
+.info {
+    color: #ECECE6;
+}
+
+.focus, .info {
+    width: 150px;
+}

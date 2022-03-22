@@ -1,0 +1,122 @@
+#calendar {
+    display: flex;
+    flex-flow: column;
+}
+#month-year {
+    font-size: 20px;
+    font-weight: bold;
+    color: #636e73;
+    padding: 20px 0;
+}
+#header {
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    border-right: 0px;
+    border-left: 0px;
+}
+#prevNext {
+    width: 100%;
+    font-size: 30px;
+    background: transparent;
+    border: 0px;
+    cursor: pointer;
+    color: white;
+}
+#prevNext:hover {
+    background-color: #0b2228;
+}
+.day_name {
+    width: calc(100% / 7);
+    border-right: 1px solid black;
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    background-color: #236578;
+    text-align: center;
+}
+.day_num {
+    width: calc(100% / 7);
+    border-right: 1px solid #9b9b9b;
+    border-bottom: 1px solid #9b9b9b;
+    padding: 15px;
+    font-weight: bold;
+    color: #7a7a7a;
+    /*min-height: 100px;*/
+    height: 52px;
+    vertical-align: 100%;
+}
+.day_num:not(.ignore) {
+    background-color: #ECECE6;
+}
+.day_num span {
+    display: inline-flex;
+    width: 30px;
+    font-size: 14px;
+}
+.day_num .event {
+    margin-top: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background-color: #f7c30d;
+    color: #ECECE6;
+    word-wrap: break-word;
+    text-align: center;
+    cursor: pointer;
+}
+.day_num .event.green {
+    background-color: #51ce57;
+    /*background-color: #207c97;*/
+}
+.day_num .event.blue {
+    background-color: #518fce;
+}
+.day_num .event.red {
+    background-color: #ce5151;
+}
+.day_num .event.orange {
+    background-color: #FB814C;
+}
+.day_num .event.teal {
+    background-color: #2abfc7;
+}
+.day_num .event.default {
+    background-color: #207c97;
+}
+.day_num:nth-child(7n+1) {
+    border-left: 1px solid #e6e9ea;
+}
+.day_num:hover {
+    background-color: #d9d9d1;
+}
+.day_num.ignore {
+    background-color: #8a8a8a;
+    color: #646262;
+    cursor: inherit;
+}
+.day_num.selected {
+    background-color: #c7c7c2;
+    cursor: inherit;
+}
+
+#focus_panel {
+    background-color: rgba(172, 172, 172, 0.50);
+    padding: 5px;
+}
+
+#foc_title {
+    font-size: large;
+}
+
+#foc_hide {
+    font-size: small;
+    font-color: #656565;
+}
+
+#foc_hide:hover {
+    text-decoration: underline;
+}
