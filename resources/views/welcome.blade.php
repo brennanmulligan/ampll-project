@@ -3,25 +3,26 @@ $athlete_controller = new \App\Http\Controllers\AthleteController();
 ?>
 <!DOCTYPE html>
 <html>
-<style>
-    * {
-        box-sizing: border-box;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    /* Create two equal columns that floats next to each other */
-    .column {
-        float: left;
-        width: 50%;
-        padding: 10px;
-    }
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+        }
 
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-</style>
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('css/interface.css') }}" type="text/css">
 </head>
 <body>
 
@@ -36,7 +37,7 @@ $athlete_controller = new \App\Http\Controllers\AthleteController();
     </div>
     <div class="column">
         <h2>Calendar UI</h2>
-        <form action="/calendar" id="athlete_select">
+        <form action="/calendar" onsubmit="return validateSubmit()" id="athlete_select">
             <select name="athlete_id" id="athlete_id" form="athlete_select">
                 <option selected disabled>Switch User</option>
                 @foreach ($athlete_controller->getAllAthletes() as $athlete)
@@ -47,6 +48,19 @@ $athlete_controller = new \App\Http\Controllers\AthleteController();
         </form>
     </div>
 </div>
+
+<script>
+    function validateSubmit() {
+        let athlete_id = document.getElementById("athlete_id");
+
+        if (athlete_id.value === "Switch User") {
+            alert("Please select a user");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 </body>
 </html>

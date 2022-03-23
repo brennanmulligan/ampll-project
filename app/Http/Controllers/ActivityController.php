@@ -13,6 +13,31 @@ class ActivityController extends Controller
             ->get();
     }
 
+    public function getMonthActivityData($athlete_id, $requestedDate) {
+        $year = substr($requestedDate, 0, 4);
+        $month = substr($requestedDate, 5, 2);
+        $isThirtyMonth = $month == 4 || $month == 6 || $month == 9 || $month == 11;
+
+        $startDate = $year . "-" . $month . "-01T00:00:00";
+        if($isThirtyMonth) {
+            $endDate = $year . "-" . $month . "-30T11:59:59";
+        } else if($month == 2) {
+            if((intval($year) % 4) == 0) {
+                $endDate = $year . "-" . $month . "-29T11:59:59";
+            }
+            else {
+                $endDate = $year . "-" . $month . "-28T11:59:59";
+            }
+        } else {
+            $endDate = $year . "-" . $month . "-31T11:59:59";
+        }
+
+        return Activity::where(function ($query) use ($endDate, $startDate, $athlete_id) {
+        $query->where("athlete_id", "=", $athlete_id)
+            ->whereBetween("start_date", [$startDate, $endDate]);
+            })->get();
+    }
+
     /**
      * stores an array of activities into the DB
      * @param $activities \App\Objects\Activity[]
