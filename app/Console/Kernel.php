@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('update:activity')->cron(config('AppConstants.activity_update_schedule'));;
+        $schedule->command('update:activity')->cron(config('AppConstants.activity_update_schedule'));
     }
 
     /**
