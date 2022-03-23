@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        error_log("Scheduling activity Job");
         $schedule->command('update:activity')->cron(config('AppConstants.activity_update_schedule'));;
     }
 
