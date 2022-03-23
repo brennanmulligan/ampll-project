@@ -29,7 +29,7 @@ class GatewayController extends Controller
         $authController->storeTokens($authData->getAthlete()->getId(), $authData->getAccessToken(), $authData->getRefreshToken());
 
         $this->storeActivitiesData($athlete->getId());
-        return redirect('ui');
+        return back();
     }
 
     /**

@@ -19,6 +19,15 @@ class AuthController extends Controller
             ->first();
     }
 
+    public function getValid($athlete_id) {
+        $valid = Auth::where('athlete_id', '=', $athlete_id)->first()->valid;
+        if($valid == 1) {
+            return True;
+        } else {
+            return False;
+        }
+    }
+
     /**
      * Stores tokens into the DB based on an athlete id
      * @param $authData AuthorizationData

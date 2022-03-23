@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\AthleteController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\StravaAPIController;
 use Illuminate\Console\Command;
 
 class UpdateActivities extends Command
@@ -33,16 +37,21 @@ class UpdateActivities extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
     public function handle()
     {
+        $athleteController = new AthleteController();
+        $athletes = $athleteController->getAthletesBeforeTime(time() - config('AppConstants.refresh_time'));
+        $authController = new AuthController();
         // Call database and get all athlete ids which need updated
 
-        // foreach through ids
-            // call strava api and get list of new activities within last 6 months
-                // if refresh data isn't valid set field in database and break
-                // loop through activities and store or update them (there should be a way to do this in a single call)
-            // update athlete's refresh_at
+        $gatewayController = new GatewayController();
+        foreach ($athletes as $athlete) {
+            if($authController->getValid($athlete->athlete_id)) {
+                $gatewayController->storeActivitiesData($athlete->athlete_id);
+            }
+        }
+        $this->info('Successfully got new activities.');
     }
 }
