@@ -10,9 +10,20 @@ if (isset($_GET["date"])) {
 }
 $calendar = new Calendar($date);
 
-$activity_controller = new \App\Http\Controllers\ActivityController();
-$monthsActivities = $activity_controller->getMonthActivityData($athlete_id, $date);
+// Handle connectivity
+if (isset($_GET["refresh"]) && $_GET["athlete_id"] != 0) {
+    $gatewayController = new \App\Http\Controllers\GatewayController();
 
+    if ($gatewayController->refreshData($_GET["athlete_id"]) == -1) {
+        header('Location: /login');
+        exit();
+    }
+}
+
+$activityController = new \App\Http\Controllers\ActivityController();
+$monthsActivities = $activityController->getMonthActivityData($athlete_id, $date);
+
+// Color-code Strava Activities in the calendar
 foreach($monthsActivities as $activity) {
     if($activity->type == "Ride" || $activity->type == "EBikeRide" || $activity->type == "Handcycle" || $activity->type == "Wheelchair" || $activity->type == "Velomobile" || $activity->type == "VirtualRide")
         // Ride-class events are displayed as red
@@ -34,12 +45,18 @@ foreach($monthsActivities as $activity) {
         $color = "";
     $calendar->add_event($activity->name, $activity->start_date, 1, $activity->activity_id, $color);
 }
+
+$athleteController =  new \App\Http\Controllers\AthleteController();
+$athlete = $athleteController->getAthlete($athlete_id);
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/interface.css') }}" type="text/css">
+
+    <title>User Calendar</title>
 
     <style>
         #test {
@@ -52,7 +69,12 @@ foreach($monthsActivities as $activity) {
 <body>
     <a id="backLink" href="{{URL::to('/')}}"><< Back to Landing Page</a>
     <h1>Calendar</h1>
-    <p>Athlete ID: {{$athlete_id}}</p>
+    <p> Welcome back, {{$athlete->first_name}} ({{$athlete_id}})</p>
+
+    <a href='calendar?athlete_id=<?php echo $athlete_id ?>&refresh=Refresh'>
+        <img src="img/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
+    </a>
+
     <?=$calendar?>
 
     <div id="focus_panel" hidden = true>
