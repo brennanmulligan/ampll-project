@@ -46,8 +46,8 @@ class GatewayController extends Controller
             $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
 
             //if the refresh token fails, reauthenticate by logging in
-            // if it is -1 it was invalid in the database
-            if($decodedResult == -1 || str_contains(serialize($decodedResult), "Bad Request")) {
+            // refreshAccessToken returns null if the access has been revoked
+            if($decodedResult == null || str_contains(serialize($decodedResult), "Bad Request")) {
                 return -1;
             } else {
                 $jsonParser = new JsonParser();
@@ -81,8 +81,8 @@ class GatewayController extends Controller
             $decodedResult = $stravaAPIController->refreshAccessToken($athleteID);
 
             //if the refresh token fails, reauthenticate by logging in
-            // if it is -1 it was invalid in the database
-            if($decodedResult == -1 || str_contains(serialize($decodedResult), "Bad Request")) {
+            // refreshAccessToken returns null if the access has been revoked
+            if($decodedResult == null || str_contains(serialize($decodedResult), "Bad Request")) {
                 return -1;
             } else {
                 $jsonParser = new JsonParser();

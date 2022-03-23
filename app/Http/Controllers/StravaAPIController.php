@@ -68,7 +68,7 @@ class StravaAPIController extends Controller
         $authController = new AuthController();
         $auth = $authController->getAuthTokens($athlete_ID);
         //if we know the refresh token is invalid don't try and use it, just return -1
-        if ($auth->valid == -1) return -1;
+        if ($auth->valid == -1) return null;
         //parameters for curl post request
         $fields = [
             'client_id' => config('AppConstants.client_id'),
