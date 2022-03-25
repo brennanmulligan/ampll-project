@@ -14,6 +14,10 @@
 
 ![Brennan Mulligan](https://imgur.com/C34oYFO.png)
 
+- Adam Haertter: I'm like Scott but the short one (and I have glasses).
+
+![Adam Haertter](https://i.imgur.com/YoS998Z.jpg)
+
 - Seth Sjoberg: I took SWE300 as an independent study with you
 
 ![Seth Sjoberg](https://imgur.com/TP6Pvcn.png)
