@@ -12,9 +12,9 @@ class Athlete
     private $state;
     private $country;
     private $sex;
-    private $updated_at;
+    private $refreshedAt;
 
-    function __construct($id, $username, $firstName, $lastName, $city, $state, $country, $sex, $updated_at)
+    function __construct($id, $username, $firstName, $lastName, $city, $state, $country, $sex, $refreshedAt = null)
     {
         $this->id = $id;
         $this->username = $username;
@@ -24,7 +24,7 @@ class Athlete
         $this->state = $state;
         $this->country = $country;
         $this->sex = $sex;
-        $this->updated_at = $updated_at;
+        $this->refreshedAt = $refreshedAt;
     }
 
     //Setters not needed because we won't be pushing data to strava
@@ -92,11 +92,7 @@ class Athlete
         return $this->sex;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
+    public function getRefreshedAt() {
+        return $this->refreshedAt;
     }
 }

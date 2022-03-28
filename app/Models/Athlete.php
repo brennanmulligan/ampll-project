@@ -26,6 +26,7 @@ class Athlete extends Model
         'country',
         'sex',
         'updated_at',
+        'refreshed_at'
     ];
 
     /**
