@@ -61,4 +61,14 @@ class ActivityController extends Controller
                 ['refreshed_at' => time()]
             );
     }
+
+    /**
+     * Delete an activity based on the given id
+     * @param $activityID mixed
+     * @return void
+     */
+    public function deleteActivity(mixed $activityID) {
+        DB::table('activity')
+            ->where('activity_id', $activityID)->delete();
+    }
 }

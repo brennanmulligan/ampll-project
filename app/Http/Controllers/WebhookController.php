@@ -24,6 +24,12 @@ class WebhookController extends Controller
             if ($data->getObjectType() == 'activity') {
                 $gatewayController->storeActivitiesData($data->getOwnerId());
             }
+        } else if ($data->getAspectType() == 'delete') {
+            // Delete Event
+            if ($data->getObjectType() == 'activity') {
+                $activityController = new ActivityController();
+                $activityController->deleteActivity($data->getObjectId());
+            }
         }
     }
 
