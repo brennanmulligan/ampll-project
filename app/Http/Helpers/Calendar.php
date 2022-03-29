@@ -58,6 +58,7 @@ class Calendar
         }
 
         for ($i = 1; $i <= $num_days; $i++) {
+            $num_events = 0;
             $selected = '';
             if ($i == $this->active_day) {
                 $selected = ' selected';
@@ -77,9 +78,14 @@ class Calendar
                     $eventDate = date('y-m-d', strtotime($event[1]));
 
                     if ($date == $eventDate) {
-                        $html .= '<div class="event' . $event[3] . '" tabindex="0" onfocus="focusEvent(this)" onblur="blurEvent()" data-value="' . $event[4] .'" >';
+                        if ($num_events < 2) {
+                            $html .= '<div class="event' . $event[3] . '" tabindex="0" onfocus="focusEvent(this)" onblur="blurEvent()" data-value="' . $event[4] .'">';
+                        } else {
+                            $html .= '<div class="event' . $event[3] . '" tabindex="0" onfocus="focusEvent(this)" onblur="blurEvent()" data-value="' . $event[4] .'" hidden>';
+                        }
                         $html .= $event[0];
                         $html .= '</div>';
+                        $num_events++;
                     }
                 }
             }
