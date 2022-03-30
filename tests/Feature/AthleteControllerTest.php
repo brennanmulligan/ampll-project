@@ -12,6 +12,22 @@ class AthleteControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private Athlete $athlete1;
+    private Athlete $athlete2;
+
+    function __construct()
+    {
+        parent::__construct();
+        parent::setUp();
+    }
+
+    protected function setUp(): void {
+        $this->athlete1 = new Athlete('37134970', 'alexschreffler', 'Alex', 'Schreffler',
+            'Herndon', 'Pennsylvania', 'United States', 'M');
+        $this->athlete2 = new Athlete('37134971', 'scotbooker', 'Scott', 'Bucher',
+            'Somewhere', 'Pennsylvania', 'United States', 'M');
+    }
+
     /**
      * Test that we can insert an athlete into our database
      *
@@ -20,12 +36,10 @@ class AthleteControllerTest extends TestCase
     public function testInsertAthlete()
     {
         $athleteController = new AthleteController();
-        $athlete = new Athlete('37134970', 'alexschreffler', 'Alex', 'Schreffler',
-            'Herndon', 'Pennsylvania', 'United States', 'M');
 
         $this->assertDatabaseMissing('athlete', ['athlete_id' => '37134970']);
 
-        $athleteController->addOrUpdate($athlete);
+        $athleteController->addOrUpdate($this->athlete1);
 
         $this->assertDatabaseHas('athlete', ['athlete_id' => '37134970']);
     }
@@ -36,18 +50,17 @@ class AthleteControllerTest extends TestCase
      */
     public function testUpdateAthlete() {
         $athleteController = new AthleteController();
-        $athlete = new Athlete('37134970', 'alexschreffler', 'Alex', 'Schreffler',
-            'Herndon', 'Pennsylvania', 'United States', 'M');
 
         $this->assertDatabaseMissing('athlete', ['athlete_id' => '37134970']);
 
-        $athleteController->addOrUpdate($athlete);
+        $athleteController->addOrUpdate($this->athlete1);
         $this->assertDatabaseHas('athlete', ['username' => 'alexschreffler']);
 
-        $newAthlete = new Athlete('37134970', 'schreffleralex', 'Alex', 'Schreffler',
+        //mimic someone changing their username
+        $updatedAthlete = new Athlete('37134970', 'schreffleralex', 'Alex', 'Schreffler',
             'Herndon', 'Pennsylvania', 'United States', 'M');
 
-        $athleteController->addOrUpdate($newAthlete);
+        $athleteController->addOrUpdate($updatedAthlete);
         $this->assertDatabaseHas('athlete', ['username' => 'schreffleralex']);
     }
 
@@ -57,9 +70,8 @@ class AthleteControllerTest extends TestCase
      */
     public function testGetAthlete() {
         $athleteController = new AthleteController();
-        $athlete = new Athlete('37134970', 'alexschreffler', 'Alex', 'Schreffler',
-            'Herndon', 'Pennsylvania', 'United States', 'M');
-        $athleteController->addOrUpdate($athlete);
+        //dummy data in test db so we don't need to add
+        $athleteController->addOrUpdate($this->athlete1);
         $athleteFromDB = $athleteController->getAthlete('37134970');
         self::assertNotEmpty($athleteFromDB);
         $id = $athleteFromDB->athlete_id;
@@ -72,12 +84,9 @@ class AthleteControllerTest extends TestCase
      */
     public function testGetAllAthletes() {
         $athleteController = new AthleteController();
-        $athlete = new Athlete('37134970', 'alexschreffler', 'Alex', 'Schreffler',
-            'Herndon', 'Pennsylvania', 'United States', 'M');
-        $athlete2 = new Athlete('37134971', 'scotbooker', 'Scott', 'Bucher',
-            'Somewhere', 'Pennsylvania', 'United States', 'M');
-        $athleteController->addOrUpdate($athlete);
-        $athleteController->addOrUpdate($athlete2);
+        //make it so we can have dummy data in the db so we dont need to add them for the test
+        $athleteController->addOrUpdate($this->athlete1);
+        $athleteController->addOrUpdate($this->athlete2);
         $athletes = $athleteController->getAllAthletes();
         self::assertNotEmpty($athletes);
         $athlete1FromDB = $athletes[0];
