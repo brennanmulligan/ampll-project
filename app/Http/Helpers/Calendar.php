@@ -72,19 +72,24 @@ class Calendar
             $html .= '<td class="day_num' . $selected . '">';
             $html .= '<span>' . $i . '</span>';
 
-            foreach ($this->events as $event) {
+            foreach ($this->events as $key => $event) {
                 for ($d = 0; $d <= ($event[2] - 1); $d++) {
                     $date = date('y-m-d', strtotime($this->active_year . '-' . $this->active_month . '-' . $i . ' -' . $d . ' day'));
                     $eventDate = date('y-m-d', strtotime($event[1]));
 
                     if ($date == $eventDate) {
+                        $current_day = substr($event[1], 0, 10);
+
                         if ($num_events < 2) {
-                            $html .= '<div class="event' . $event[3] . '" tabindex="0" onfocus="focusEvent(this)" onblur="blurEvent()" data-value="' . $event[4] .'">';
-                        } else {
-                            $html .= '<div class="event' . $event[3] . '" tabindex="0" onfocus="focusEvent(this)" onblur="blurEvent()" data-value="' . $event[4] .'" hidden>';
+                            $html .= "<div class='event $event[3]' tabindex='0' onclick='showMoreActivities(this, \"$current_day\")' data-value='$event[4]'>$event[0]</div>";
+                        } else if ($num_events == 2) {
+                            $html .= "<span class='expand' title='Show More' onclick='showMoreActivities(this, \"$current_day\")'>
+                                            <img src='img/ExpandButton.png' height='20px' width='20px'>
+                                      </span>";
                         }
-                        $html .= $event[0];
-                        $html .= '</div>';
+
+                        unset($this->events[$key]);
+
                         $num_events++;
                     }
                 }

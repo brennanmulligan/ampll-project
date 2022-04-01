@@ -21,7 +21,9 @@
     background: transparent;
     border: 0px;
     cursor: pointer;
-    color: white;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.2s ease-out;
 }
 #prevNext:hover {
     background-color: #0b2228;
@@ -51,22 +53,44 @@
 .day_num:not(.ignore) {
     background-color: #ECECE6;
 }
-.day_num span {
+.day_num span:not(.expand) {
     display: inline-flex;
     width: 30px;
     font-size: 14px;
 }
-.day_num .event {
+.event {
     margin-top: 10px;
     font-weight: 500;
     font-size: 14px;
     padding: 3px 6px;
     border-radius: 4px;
-    background-color: #f7c30d;
-    color: #ECECE6;
     word-wrap: break-word;
     text-align: center;
     cursor: pointer;
+    background-color: #f7c30d;
+    color: #ECECE6;
+    transition: all 0.2s;
+}
+.event:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 5px 5px black,
+                4px 4px black,
+                3px 3px black,
+                2px 2px black,
+                1px 1px black;
+    transition: all 0.2s;
+}
+.expand {
+    float: right;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.expand:hover {
+    box-shadow: 0px 0px 20px 1px #2ee3b0;
+    background-color: #a2dcc7;
+    border-radius: 10px;
+    transition: all 0.2s;
 }
 .day_num .event.green {
     background-color: #51ce57;
@@ -87,6 +111,26 @@
 .day_num .event.default {
     background-color: #207c97;
 }
+
+.day_num .event.green:hover {
+    background-color: #40ab45;
+}
+.day_num .event.blue:hover {
+    background-color: #4173a7;
+}
+.day_num .event.red:hover {
+    background-color: #a53f3f;
+}
+.day_num .event.orange:hover {
+    background-color: #cd683c;
+}
+.day_num .event.teal:hover {
+    background-color: #1f9197;
+}
+.day_num .event.default:hover {
+    background-color: #124d5e;
+}
+
 .day_num:nth-child(7n+1) {
     border-left: 1px solid #e6e9ea;
 }
@@ -103,9 +147,15 @@
     cursor: inherit;
 }
 
-#focus_panel {
+.focus_panel {
     background-color: rgba(172, 172, 172, 0.50);
     padding: 5px;
+    margin: 5px 0;
+}
+
+.focus_panel:last-child {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
 #foc_title {
