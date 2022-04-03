@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->tinyInteger('private')->nullable();
-            $table->tinyInteger('hidden');
+            $table->tinyInteger('is_hidden');
 
             // Declare our foreign key
             $table->foreign('athlete_id')->references('athlete_id')->on('athlete')->onDelete('cascade');
