@@ -21,13 +21,13 @@ table {
     text-decoration: none;
 }
 
-p, button,
+p:not(.content), button:not(#close),
 .cell,
 #header {
     color: #ECECE6;
 }
 
-input[type="submit"], button {
+input[type="submit"], button:not(#close, #prevNext) {
     background-color: #33a988;
     color: black;
     padding: 10px;
@@ -37,7 +37,7 @@ input[type="submit"], button {
 }
 
 input[type="submit"]:hover,
-button:hover {
+button:not(#close):hover {
     background-color: #24725c;
     color: white;
     transition: all 0.2s ease-in;

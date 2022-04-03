@@ -55,6 +55,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
 <head>
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/interface.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/modal_box.css') }}" type="text/css">
 
     <title>User Calendar</title>
 
@@ -75,62 +76,107 @@ $athlete = $athleteController->getAthlete($athlete_id);
         <img src="img/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
     </a>
 
-    <?=$calendar?>
-
-    <div id="focus_panel" hidden = true>
-        <table>
-            <tbody>
-                <tr>
-                    <td class="focus" style="font-size: large">Name: </td>
-                    <td class="info" id="foc_title"></td>
-                    <td class="focus">Type: </td>
-                    <td class="info" id="foc_type"></td>
-                </tr>
-                <tr>
-                    <td class="focus">Date: </td>
-                    <td class="info" id="foc_date"></td>
-                    <td class="focus">Time: </td>
-                    <td class="info" id="foc_time"></td>
-                </tr>
-                <tr>
-                    <td class="focus">Distance: </td>
-                    <td class="info" id="foc_dist"></td>
-                    <td class="focus">Elevation: </td>
-                    <td class="info" id="foc_elev"></td>
-                </tr>
-                <tr>
-                    <td class="focus">Kudos: </td>
-                    <td class="info" id="foc_kudos"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div id="moreActivities">
+        <div id="modal_content">
+            <div id="modal-header">
+                <button id="close" onclick="closeModal()">&times;</button>
+                <h2 id="modal_h2"></h2>
+            </div>
+            <div id="activities_content"></div>
+        </div>
     </div>
 
-    <!--<div id="focus_panel" hidden = true>
-        <label class="focus" style="font-size: large">Name: </label>
-        <span class="info" id="foc_title"></span>
-        <br>
-        <label class="focus">Type: </label>
-        <span class="info" id="foc_type"></span>
-        <br>
-        <label class="focus">Date: </label>
-        <span class="info" id="foc_date"></span>
-        <br>
-        <label class="focus">Time: </label>
-        <span class="info" id="foc_time"></span>
-        <br>
-        <label class="focus">Distance: </label>
-        <span class="info" id="foc_dist"></span>
-        <br>
-        <label class="focus">Elevation: </label>
-        <span class="info" id="foc_elev"></span>
-        <br>
-        <label class="focus">Kudos: </label>
-        <span class="info" id="foc_kudos"></span>
-    </div>-->
+    <?=$calendar?>
 </body>
 </html>
 <script>
+    function showMoreActivities(elem, date) {
+        let modal = document.getElementById("moreActivities");
+        let content = document.getElementById("activities_content");
+        let month_activities = JSON.parse('<?=json_encode($monthsActivities)?>');
+        let day_activities = [];
+
+        document.getElementById("modal_h2").innerHTML = convertDate(date);
+
+        if (elem.classList.contains("expand")) {
+            for (let i = 0; i < month_activities.length; i++) {
+                if (month_activities[i].start_date.substring(0, 10) === date) {
+                    day_activities.push(month_activities[i]);
+                }
+            }
+        } else if (elem.classList.contains("event")) {
+            let found = false;
+            let i = 0;
+
+            while (!found && i < month_activities.length) {
+                if (month_activities[i].activity_id === parseInt(elem.getAttribute("data-value"))) {
+                    day_activities.push(month_activities[i]);
+                    found = true;
+                }
+
+                i++;
+            }
+        }
+
+        for (let i = 0; i < day_activities.length; i++) {
+            let focus_panel = document.createElement("div");
+            focus_panel.className = "focus_panel";
+
+            focus_panel.appendChild(createTableFromData(day_activities[i]));
+            content.appendChild(focus_panel);
+        }
+
+        modal.classList.remove("fadeOut");
+        modal.classList.add("fadeIn");
+    }
+
+    function createTableFromData(activity) {
+        let table = document.createElement("table");
+        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos"];
+        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos"];
+        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count"];
+        let locationInArray = 0;
+
+        for (let rowCount = 0; rowCount < 3; rowCount++) {
+            let row = table.insertRow();
+
+            for (let i = 0; i < 2; i++) {
+                let td1 = row.insertCell();
+                td1.className = "focus";
+                td1.innerHTML = fields[locationInArray] + ": ";
+
+                let td2 = row.insertCell();
+                td2.className = "info";
+                td2.id = IDs[locationInArray];
+                td2.innerHTML = activity[arrKeys[locationInArray]];
+
+                locationInArray++;
+            }
+        }
+
+        return table;
+    }
+
+    function closeModal() {
+        let modal = document.getElementById("moreActivities");
+
+        modal.classList.remove("fadeIn");
+        modal.classList.add("fadeOut");
+
+        /* Wait until animation finishes before clearing content */
+        setTimeout(function() {
+                document.getElementById("activities_content").innerHTML = "";
+        }, 250);
+    }
+
+    window.onclick = function(event) {
+        let modal = document.getElementById("moreActivities");
+
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
     function focusEvent(myEvent) {
         let panel = document.getElementById("focus_panel");
         panel.hidden = false;
