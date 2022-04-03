@@ -72,6 +72,7 @@ try {
             <th class="cell">Elevation</th>
             <th class="cell">Start Date</th>
             <th class="cell">Kudos Count</th>
+            <th class="cell">Private</th>
             <th class="cell">Hidden</th>
         </tr>
         @foreach ($all_activities as $activity)
@@ -84,6 +85,7 @@ try {
                 <td class="cell">{{ $activity->total_elevation_gain }}</td>
                 <td class="cell">{{ $activity->start_date_local }}</td>
                 <td class="cell">{{ $activity->kudos_count }}</td>
+                <td class="cell">{{ $activity->private }}</td>
                 <td class="cell">{{ $activity->is_hidden }}</td>
             </tr>
         @endforeach
