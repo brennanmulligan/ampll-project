@@ -25,18 +25,18 @@ class Calendar
         // Color-code Strava Activities in the calendar
         foreach($activitiesByMonth as $activity) {
             if($activity->type == "Ride" || $activity->type == "EBikeRide" || $activity->type == "Handcycle" || $activity->type == "Wheelchair" || $activity->type == "Velomobile" || $activity->type == "VirtualRide")
-                // Ride-class events are displayed as red
+                // Ride-group events are displayed as red
                 $color = "red";
-            else if($activity->type == "Run" || $activity->type == "VirtualRun" || $activity->type == "Walk" || $activity->type == "Hike" || $activity->type == "Elliptical" || $activity->type == "StairStepper")
-                // Run-class events are displayed as orange
+            else if($activity->type == "Run" || $activity->type == "VirtualRun" || $activity->type == "Walk" || $activity->type == "Hike" || $activity->type == "RockClimbing")
+                // Run-group events are displayed as orange
                 $color = "orange";
             else if($activity->type == "Swim" || $activity->type == "Canoeing" || $activity->type == "Kayaking" || $activity->type == "Kitesurf" || $activity->type == "Rowing" || $activity->type == "StandUpPaddling" || $activity->type == "Surfing"  || $activity->type == "Windsurf")
-                // Swim-class events are displayed as blue
+                // Water-group events are displayed as blue
                 $color = "blue";
-            else if($activity->type == "AlpineSki" || $activity->type == "BackcountrySki" || $activity->type == "RollerSki" || $activity->type == "Snowboard" || $activity->type == "Snowshoe" || $activity->type == "IceSkate" || $activity->type == "NordicSki")
-                // Snowsports are displayed as teal
+            else if($activity->type == "AlpineSki" || $activity->type == "BackcountrySki" || $activity->type == "Snowboard" || $activity->type == "Snowshoe" || $activity->type == "IceSkate" || $activity->type == "NordicSki")
+                // Winter-group are displayed as teal
                 $color = "teal";
-            else if($activity->type == "Crossfit" || $activity->type == "WeightTraining" || $activity->type == "Workout" || $activity->type == "Yoga" || $activity->type == "InlineSkate" || $activity->type == "RockClimbing")
+            else if($activity->type == "Crossfit" || $activity->type == "WeightTraining" || $activity->type == "Workout" || $activity->type == "Yoga" || $activity->type == "InlineSkate" || $activity->type == "Elliptical" || $activity->type == "StairStepper" || $activity->type == "RollerSki")
                 // Other Strava events are displayed as green
                 $color = "green";
             else
@@ -106,7 +106,7 @@ class Calendar
                         $current_day = substr($event[1], 0, 10);
 
                         if ($num_events < 2) {
-                            $html .= "<div class='event $event[3]' tabindex='0' onclick='showMoreActivities(this, \"$current_day\")' data-value='$event[4]'>$event[0]</div>";
+                            $html .= "<div class='event $event[3]' tabindex='0' onclick='showMoreActivities(this, \"$current_day\")' id='$event[4]'>$event[0]</div>";
                         } else if ($num_events == 2) {
                             $html .= "<span class='expand' title='Show More' onclick='showMoreActivities(this, \"$current_day\")'>
                                             <img src='img/ExpandButton.png' height='20px' width='20px'>
