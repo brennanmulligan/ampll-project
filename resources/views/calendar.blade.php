@@ -165,10 +165,13 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
         document.getElementById("modal_h2").innerHTML = convertDate(date);
 
+        let hidingPrivate = document.getElementById("hidePrivate").checked;
+
         if (elem.classList.contains("expand")) {
             for (let i = 0; i < month_activities.length; i++) {
                 if (month_activities[i].start_date.substring(0, 10) === date) {
-                    day_activities.push(month_activities[i]);
+                    if(!hidingPrivate || month_activities[i].private !== 1)
+                        day_activities.push(month_activities[i]);
                 }
             }
         } else if (elem.classList.contains("event")) {
@@ -176,7 +179,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
             let i = 0;
 
             while (!found && i < month_activities.length) {
-                if (month_activities[i].activity_id === parseInt(elem.getAttribute("data-value"))) {
+                if (month_activities[i].activity_id === parseInt(elem.getAttribute("id"))) {
                     day_activities.push(month_activities[i]);
                     found = true;
                 }
@@ -311,8 +314,15 @@ $athlete = $athleteController->getAthlete($athlete_id);
     }
 
     function hideActivitiesToggle(e) {
-        console.log("Clicked, new value = " + e.checked);
-        // let p = document.getElementById("hidePrivate");
-        // p.checked = false;
+        for(let i = 0; i < month_activities.length; i++) {
+
+            // If the activity is private
+            if(month_activities[i]["private"] === 1) {
+                let element = document.getElementById(month_activities[i]['activity_id']);
+
+                // Hide or unhide accordingly
+                element.hidden = e.checked;
+            }
+        }
     }
 </script>
