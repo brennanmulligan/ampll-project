@@ -10,6 +10,20 @@ if (isset($_GET["date"])) {
 }
 $calendar = new Calendar($date);
 
+$activityController = new \App\Http\Controllers\ActivityController();
+$monthsActivities = $activityController->getMonthActivityData($athlete_id, $date);
+
+$calendar->setActivitiesForCalendar($calendar, $monthsActivities);
+
+if (isset($_GET["mode"])) {
+    $arr[] = "";
+    $arr[0] = $calendar;
+    $arr[1] = $monthsActivities;
+
+    echo implode(",,,", $arr);
+    exit();
+}
+
 // Handle connectivity
 if (isset($_GET["refresh"]) && $_GET["athlete_id"] != 0) {
     $gatewayController = new \App\Http\Controllers\GatewayController();
@@ -18,32 +32,6 @@ if (isset($_GET["refresh"]) && $_GET["athlete_id"] != 0) {
         header('Location: /login');
         exit();
     }
-}
-
-$activityController = new \App\Http\Controllers\ActivityController();
-$monthsActivities = $activityController->getMonthActivityData($athlete_id, $date);
-
-// Color-code Strava Activities in the calendar
-foreach($monthsActivities as $activity) {
-    if($activity->type == "Ride" || $activity->type == "EBikeRide" || $activity->type == "Handcycle" || $activity->type == "Wheelchair" || $activity->type == "Velomobile" || $activity->type == "VirtualRide")
-        // Ride-class events are displayed as red
-        $color = "red";
-    else if($activity->type == "Run" || $activity->type == "VirtualRun" || $activity->type == "Walk" || $activity->type == "Hike" || $activity->type == "Elliptical" || $activity->type == "StairStepper")
-        // Run-class events are displayed as orange
-        $color = "orange";
-    else if($activity->type == "Swim" || $activity->type == "Canoeing" || $activity->type == "Kayaking" || $activity->type == "Kitesurf" || $activity->type == "Rowing" || $activity->type == "StandUpPaddling" || $activity->type == "Surfing"  || $activity->type == "Windsurf")
-        // Swim-class events are displayed as blue
-        $color = "blue";
-    else if($activity->type == "AlpineSki" || $activity->type == "BackcountrySki" || $activity->type == "RollerSki" || $activity->type == "Snowboard" || $activity->type == "Snowshoe" || $activity->type == "IceSkate" || $activity->type == "NordicSki")
-        // Snowsports are displayed as teal
-        $color = "teal";
-    else if($activity->type == "Crossfit" || $activity->type == "WeightTraining" || $activity->type == "Workout" || $activity->type == "Yoga" || $activity->type == "InlineSkate" || $activity->type == "RockClimbing")
-        // Other Strava events are displayed as green
-        $color = "green";
-    else
-        // Any other activities (null, unlabeled, etc) are set to a default color
-        $color = "";
-    $calendar->add_event($activity->name, $activity->start_date, 1, $activity->activity_id, $color);
 }
 
 $athleteController =  new \App\Http\Controllers\AthleteController();
@@ -56,6 +44,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/interface.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/modal_box.css') }}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <title>User Calendar</title>
 
@@ -65,16 +54,91 @@ $athlete = $athleteController->getAthlete($athlete_id);
             color: white;
             display: none;
         }
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 35px;
+            height: 17px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 13px;
+            width: 13px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 </head>
-<body>
+<body>s
     <a id="backLink" href="{{URL::to('/')}}"><< Back to Landing Page</a>
     <h1>Calendar</h1>
     <p> Welcome back, {{$athlete->first_name}} ({{$athlete_id}})</p>
 
-    <a href='calendar?athlete_id=<?php echo $athlete_id ?>&refresh=Refresh'>
-        <img src="img/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
-    </a>
+    <div class="row">
+        <div class="column">
+            <a href='calendar?athlete_id=<?php echo $athlete_id ?>&refresh=Refresh'>
+                <img src="img/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
+            </a>
+        </div>
+        <div class="column">
+            <!-- Rounded switch -->
+            <p>Make Private Activites Hidden</p>
+            <label class="switch">
+                <input id="hidePrivate" type="checkbox" onchange='hideActivitiesToggle(this);'>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
 
     <div id="moreActivities">
         <div id="modal_content">
@@ -86,14 +150,17 @@ $athlete = $athleteController->getAthlete($athlete_id);
         </div>
     </div>
 
-    <?=$calendar?>
+    <div id="calendarDIV">
+        <?=$calendar?>
+    </div>
 </body>
 </html>
 <script>
+    let month_activities = JSON.parse(<?=count($monthsActivities) == 0 ? 0 : json_encode($monthsActivities)?>);
+
     function showMoreActivities(elem, date) {
         let modal = document.getElementById("moreActivities");
         let content = document.getElementById("activities_content");
-        let month_activities = JSON.parse('<?=json_encode($monthsActivities)?>');
         let day_activities = [];
 
         document.getElementById("modal_h2").innerHTML = convertDate(date);
@@ -177,32 +244,6 @@ $athlete = $athleteController->getAthlete($athlete_id);
         }
     }
 
-    function focusEvent(myEvent) {
-        let panel = document.getElementById("focus_panel");
-        panel.hidden = false;
-        let json = JSON.parse('<?=json_encode($monthsActivities)?>');
-        let activity_id = myEvent.getAttribute('data-value');
-        let found = false;
-        let i = 0;
-        while(!found) {
-            if (JSON.stringify(json[i]["activity_id"]) === activity_id) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-
-        document.getElementById("foc_title").innerHTML = json[i]["name"]
-        document.getElementById("foc_type").innerHTML = json[i]["type"]
-        let date = convertDate(JSON.stringify(json[i]["start_date"]).substring(1, 11));
-        document.getElementById("foc_date").innerHTML = date
-        document.getElementById("foc_time").innerHTML = json[i]["elapsed_time"] + " seconds"
-        document.getElementById("foc_dist").innerHTML = json[i]["distance"]
-        document.getElementById("foc_elev").innerHTML = json[i]["total_elevation_gain"]
-        document.getElementById("foc_kudos").innerHTML = json[i]["kudos_count"]
-        document.getElementById("foc_private").innerHTML = json[i]["private"];
-    }
-
     function convertDate(date) {
         let months = {
             1: "January",       7: "July",
@@ -217,67 +258,61 @@ $athlete = $athleteController->getAthlete($athlete_id);
         return months[parseInt(tempDate[1])] + " " + tempDate[2] + ", " + tempDate[0];
     }
 
-    function blurEvent() {
-        //document.getElementById("focus_panel").hidden = true;
-    }
-
     function changeMonth(goForward) {
-        let today = new Date();
-
-        let str = "{{$date}}";
-        if(str != "") {
-            // If $date is set, we should use that instead of today
-            let y = Number(str.substring(0, 4));
-            let m = Number(str.substring(5, 7));
-            let d = Number(str.substring(8));
-            today = new Date(y, m-1, d);
+        let months = {
+            "January": 1,       "July": 7,
+            "February": 2,      "August": 8,
+            "March": 3,         "September": 9,
+            "April": 4,         "October": 10,
+            "May": 5,           "November": 11,
+            "June": 6,          "December": 12
         }
+        let header = document.getElementById("header");
+        let month = months[header.innerHTML.substring(0, header.innerHTML.indexOf(" "))];
+        let year = parseInt(header.innerHTML.substring(header.innerHTML.indexOf(" ") + 1));
+        // Default for day is 01. This is change if we're switching to the current month and year
+        let day = "01";
 
-        let day = String(today.getDate()).padStart(2, '0');
-        let year = today.getFullYear();
-        let month;
-        if(goForward) {
-            // Next month
-            if(today.getMonth() < 11) {
-                // Add 1 for proper adjustment and 1 for the month increase
-                month = String(today.getMonth() + 2).padStart(2, '0');
-            } else {
-                // December, has to loop back to January
-                month = String(1).padStart(2, '0');
-                year++;
-            }
-        } else {
-            // Previous Month
-            if(today.getMonth() == 0){
-                // January, has to go back to last December
-                month = String(12).padStart(2, '0');
+        if (goForward === false) {
+            if (month === 1) {
+                month = 12;
                 year--;
             } else {
-                // JS months start at 0, so we don't have to adjust
-                month = String(today.getMonth()).padStart(2, '0');
+                month--;
             }
-        }
-
-        // Handle if the current date is higher than possible in the next month
-        let isThirtyMonth = month == "09" || month == "04" || month == "06" || month == "11";
-        if(month == "02" && today.getDate() >= 28) {
-            if(year % 4 == 0 && today.getDate() >= 29) {
-                // Leap February, cap at 29
-                day = "29";
+        } else {
+            if (month === 12) {
+                month = 1;
+                year++;
             } else {
-                // Regular February, cap at 28
-                day = "28";
+                month++;
             }
-        } else if (isThirtyMonth && today.getDate() >= 30) {
-            // If over 30 days, cap at 30 for these months
-            day = "30";
         }
 
-        // Recompile date into Y-m-d
-        let date = "" + year + '-' + month + '-' + day;
+        let today = new Date();
+        if (month === (today.getMonth()+1) && year === today.getFullYear()) {
+            day = today.getDate() < 10 ? "0" + today.getDate().toString() : today.getDate().toString();
+        }
 
-        // Go to page, place variables in URL
-        window.location.href = "/calendar?athlete_id={{$athlete_id}}&date="+date;
+        let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
+        let date = year.toString() + "-" + tempMonth + "-" + day;
+
+        $.ajax({
+            url: window.location.href,
+            type: "GET",
+            data: {mode: "refreshCalendar", date: date},
+            success: function(response) {
+                response = response.split(",,,");
+
+                month_activities = JSON.parse(response[1]);
+                document.getElementById("calendarDIV").innerHTML = response[0];
+            }
+        });
     }
 
+    function hideActivitiesToggle(e) {
+        console.log("Clicked, new value = " + e.checked);
+        // let p = document.getElementById("hidePrivate");
+        // p.checked = false;
+    }
 </script>
