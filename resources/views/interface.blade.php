@@ -72,8 +72,8 @@ try {
             <th class="cell">Elevation</th>
             <th class="cell">Start Date</th>
             <th class="cell">Kudos Count</th>
-            <th class="cell">Private</th>
-            <th class="cell">Hidden</th>
+            <th class="cell">Private (Strava)</th>
+            <th class="cell">Hidden (Ampll)</th>
         </tr>
         @foreach ($all_activities as $activity)
             <tr>

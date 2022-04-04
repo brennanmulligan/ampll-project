@@ -132,12 +132,12 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
     function createTableFromData(activity) {
         let table = document.createElement("table");
-        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos"];
-        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos"];
-        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count"];
+        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos", "Private (Strava)"];
+        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos", "foc_private"];
+        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count", "private"];
         let locationInArray = 0;
 
-        for (let rowCount = 0; rowCount < 3; rowCount++) {
+        for (let rowCount = 0; rowCount < 4; rowCount++) {
             let row = table.insertRow();
 
             for (let i = 0; i < 2; i++) {
@@ -200,6 +200,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
         document.getElementById("foc_dist").innerHTML = json[i]["distance"]
         document.getElementById("foc_elev").innerHTML = json[i]["total_elevation_gain"]
         document.getElementById("foc_kudos").innerHTML = json[i]["kudos_count"]
+        document.getElementById("foc_private").innerHTML = json[i]["private"];
     }
 
     function convertDate(date) {
