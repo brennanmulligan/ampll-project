@@ -171,7 +171,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
     }
 
     function blurEvent() {
-        document.getElementById("focus_panel").hidden = true;
+        //document.getElementById("focus_panel").hidden = true;
     }
 
     function changeMonth(goForward) {

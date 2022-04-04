@@ -48,6 +48,7 @@
     height: 52px;
     vertical-align: 100%;
 }
+
 .day_num:not(.ignore) {
     background-color: #ECECE6;
 }
