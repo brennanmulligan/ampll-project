@@ -25,7 +25,10 @@ return new class extends Migration
             $table->string('start_date_local')->nullable();
             $table->integer('utc_offset')->nullable();
             $table->integer('kudos_count')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->tinyInteger('private')->nullable();
+            $table->tinyInteger('is_hidden');
 
             // Declare our foreign key
             $table->foreign('athlete_id')->references('athlete_id')->on('athlete')->onDelete('cascade');
