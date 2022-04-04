@@ -199,12 +199,12 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
     function createTableFromData(activity) {
         let table = document.createElement("table");
-        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos"];
-        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos"];
-        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count"];
+        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos", "Private (Strava)", "Hidden (Ampll)"];
+        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos", "foc_private", "foc_hidden"];
+        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count", "private", "is_hidden"];
         let locationInArray = 0;
 
-        for (let rowCount = 0; rowCount < 3; rowCount++) {
+        for (let rowCount = 0; rowCount < 4; rowCount++) {
             let row = table.insertRow();
 
             for (let i = 0; i < 2; i++) {
