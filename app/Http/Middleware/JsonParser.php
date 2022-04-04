@@ -57,7 +57,7 @@ class JsonParser
                 $activity->type, $activity->elapsed_time,
                 $activity->distance, $activity->total_elevation_gain,
                 $activity->start_date, $activity->start_date_local,
-                $activity->utc_offset, $activity->kudos_count);
+                $activity->utc_offset, $activity->kudos_count, $activity->private);
         }
         return $activities;
     }
