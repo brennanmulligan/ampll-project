@@ -76,13 +76,19 @@ class AthleteController extends Controller
      * @param mixed $athleteID
      * @param int $seconds
      * @return void
-     * function to update an athlete's next_sync_time
+     *Update an athlete's next_sync_time if the new one would be larger
      */
     public function updateSyncTime(mixed $athleteID, int $seconds) {
-        DB::table('athlete')
+        /*DB::table('athlete')
             ->updateOrInsert(
                 ['athlete_id' => $athleteID],
                 ['next_sync_time' => time() + $seconds] //This is number of seconds in a week
-            );
+            );*/
+
+        DB::table('athlete')
+            ->select("*")
+            ->where('athlete_id', '=', $athleteID)
+            ->where('next_sync_time', '<', time() + $seconds)
+            ->update(['next_sync_time' => time() + $seconds]);
     }
 }
