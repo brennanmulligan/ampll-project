@@ -24,6 +24,7 @@ return new class extends Migration
             $table->char('sex')->nullable();
             $table->integer('refreshed_at')->nullable();
             $table->boolean('hide_private_data')->nullable();
+            $table->integer('next_sync_time')->nullable();
             $table->timestamps();
         });
     }

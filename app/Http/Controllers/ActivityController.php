@@ -61,6 +61,8 @@ class ActivityController extends Controller
                 ['athlete_id' => $athleteID],
                 ['refreshed_at' => time()]
             );
+        $athleteController = new AthleteController();
+        $athleteController->updateSyncTime($athleteID, 3600); //Number of seconds in an hour
     }
 
     /**

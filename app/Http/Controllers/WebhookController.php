@@ -18,17 +18,20 @@ class WebhookController extends Controller
        $json = $request->json()->all();
 
        $data = $jsonParser->parseWebhookData($json);
+       $athleteController = new AthleteController();
 
         if ($data->getAspectType() == 'create' || $data->getAspectType() == 'update') {
             $gatewayController = new GatewayController();
             if ($data->getObjectType() == 'activity') {
                 $gatewayController->storeActivitiesData($data->getOwnerId());
             }
+            $athleteController->updateSyncTime($data->getOwnerId(), 604800);
         } else if ($data->getAspectType() == 'delete') {
             // Delete Event
             if ($data->getObjectType() == 'activity') {
                 $activityController = new ActivityController();
                 $activityController->deleteActivity($data->getObjectId());
+                $athleteController->updateSyncTime($data->getOwnerId(), 604800);
             }
         }
     }

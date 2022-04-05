@@ -42,7 +42,7 @@ class UpdateActivities extends Command
     public function handle()
     {
         $athleteController = new AthleteController();
-        $athletes = $athleteController->getAthletesBeforeTime(time() - config('AppConstants.refresh_time'));
+        $athletes = $athleteController->getAthletesToRefresh();
         $authController = new AuthController();
         // Call database and get all athlete ids which need updated
 

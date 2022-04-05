@@ -59,4 +59,30 @@ class AthleteController extends Controller
             ->where('refreshed_at', '<', $time)
             ->get();
     }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     * function to return athletes past their next_sync_time
+     */
+    public function getAthletesToRefresh() {
+        //since refreshed_at is in epoch time, we can just see if it's less than (same as before) the time we send it
+        return DB::table('athlete')
+            ->select("*")
+            ->where('next_sync_time', '<', time())
+            ->get();
+    }
+
+    /**
+     * @param mixed $athleteID
+     * @param int $seconds
+     * @return void
+     * function to update an athlete's next_sync_time
+     */
+    public function updateSyncTime(mixed $athleteID, int $seconds) {
+        DB::table('athlete')
+            ->updateOrInsert(
+                ['athlete_id' => $athleteID],
+                ['next_sync_time' => time() + $seconds] //This is number of seconds in a week
+            );
+    }
 }
