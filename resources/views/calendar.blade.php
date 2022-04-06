@@ -134,7 +134,13 @@ $athlete = $athleteController->getAthlete($athlete_id);
             <!-- Rounded switch -->
             <p>Make Private Activites Hidden</p>
             <label class="switch">
-                <input id="hidePrivate" type="checkbox" onchange='hideActivitiesToggle(this);'>
+                <input id="hidePrivate" type="checkbox" onchange='privateActivitiesToggle(this);'>
+                <span class="slider round"></span>
+            </label>
+
+            <p>Show Hidden Activities</p>
+            <label class="switch">
+                <input id="hideHidden" type="checkbox" onchange='hiddenActivitiesToggle(this);'>
                 <span class="slider round"></span>
             </label>
         </div>
@@ -313,7 +319,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
         });
     }
 
-    function hideActivitiesToggle(e) {
+    function privateActivitiesToggle(e) {
         for(let i = 0; i < month_activities.length; i++) {
 
             // If the activity is private
@@ -322,6 +328,19 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
                 // Hide or unhide accordingly
                 element.hidden = e.checked;
+            }
+        }
+    }
+
+    function hiddenActivitiesToggle(e) {
+        for(let i = 0; i < month_activities.length; i++) {
+
+            // If the activity is hidden from Ampll
+            if(month_activities[i]["is_hidden"] === 1) {
+                let element = document.getElementById(month_activities[i]['activity_id']);
+
+                // Hide or unhide accordingly
+                element.hidden = !e.checked;
             }
         }
     }
