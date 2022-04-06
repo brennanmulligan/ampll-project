@@ -15,6 +15,20 @@ $monthsActivities = $activityController->getMonthActivityData($athlete_id, $date
 
 $calendar->setActivitiesForCalendar($calendar, $monthsActivities);
 
+if (isset($_GET["activity"])) {
+    $sentActivity = $_GET["activity"] ?? 0;
+
+    // We still have $sentActivity, so update DB
+    $sentActivity = $activityController->toggleActivityHidden($sentActivity);
+
+    $arr[] = "";
+    $arr[0] = $calendar;
+    $arr[1] = $monthsActivities;
+
+    echo implode(",,,", $arr); // Loads array into response var
+    exit();
+}
+
 if (isset($_GET["mode"])) {
     $arr[] = "";
     $arr[0] = $calendar;
@@ -132,15 +146,15 @@ $athlete = $athleteController->getAthlete($athlete_id);
         </div>
         <div class="column">
             <!-- Rounded switch -->
-            <p>Make Private Activites Hidden</p>
+            <p>Show Strava's Private Activities</p>
             <label class="switch">
-                <input id="hidePrivate" type="checkbox" onchange='privateActivitiesToggle(this);'>
+                <input id="hidePrivate" type="checkbox" checked="true" onchange='privateActivitiesToggle(this);'>
                 <span class="slider round"></span>
             </label>
 
             <p>Show Hidden Activities</p>
             <label class="switch">
-                <input id="hideHidden" type="checkbox" onchange='hiddenActivitiesToggle(this);'>
+                <input id="hideHidden" type="checkbox" checked="true" onchange='hiddenActivitiesToggle(this);'>
                 <span class="slider round"></span>
             </label>
         </div>
@@ -213,10 +227,27 @@ $athlete = $athleteController->getAthlete($athlete_id);
         let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count", "private", "is_hidden"];
         let locationInArray = 0;
 
-        for (let rowCount = 0; rowCount < 4; rowCount++) {
+        let numRows = 5;
+        let numCols = 2;
+
+        for (let rowCount = 0; rowCount < numRows; rowCount++) {
             let row = table.insertRow();
 
-            for (let i = 0; i < 2; i++) {
+            // Manually add the Hide button
+            if(rowCount === numRows - 1) {
+                let td1 = row.insertCell();
+
+                let btn = document.createElement("input");
+                btn.type = "button";
+                btn.id = "hideButton";
+                btn.value = "Toggle Hidden";
+                btn.onclick = function() {hideActivity(activity)}; // Assign anonymous function to onclick
+                td1.appendChild(btn);
+
+                continue;
+            }
+
+            for (let i = 0; i < numCols; i++) {
                 let td1 = row.insertCell();
                 td1.className = "focus";
                 td1.innerHTML = fields[locationInArray] + ": ";
@@ -311,12 +342,49 @@ $athlete = $athleteController->getAthlete($athlete_id);
             type: "GET",
             data: {mode: "refreshCalendar", date: date},
             success: function(response) {
-                response = response.split(",,,");
+                    ajaxRedraw(response);
+                }
+        });
+    }
 
-                month_activities = JSON.parse(response[1]);
-                document.getElementById("calendarDIV").innerHTML = response[0];
+    function hideActivity(activity) {
+        console.log("Hide Activity...");
+
+        let months = {
+            "January": 1,       "July": 7,
+            "February": 2,      "August": 8,
+            "March": 3,         "September": 9,
+            "April": 4,         "October": 10,
+            "May": 5,           "November": 11,
+            "June": 6,          "December": 12
+        }
+        let header = document.getElementById("header");
+        let month = months[header.innerHTML.substring(0, header.innerHTML.indexOf(" "))];
+        let year = parseInt(header.innerHTML.substring(header.innerHTML.indexOf(" ") + 1));
+        let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
+        let date = year.toString() + "-" + tempMonth + "-" + "01";
+
+        //demo demo demo demo
+        $.ajax({
+            url: window.location.href,
+            type: "GET",
+            data: {activity: activity.activity_id, date: date}, // Send to the server
+            success: function(response) {
+                // console.log("We did it! " + activity.activity_id);
+                // console.log("Response: " + response);
+                ajaxRedraw(response);
             }
         });
+    }
+
+    function ajaxRedraw(response) {
+        response = response.split(",,,");
+
+        // Updates month_activities for the new calendar
+        month_activities = JSON.parse(response[1]);
+
+        // Redraw the calendar
+        document.getElementById("calendarDIV").innerHTML = response[0];
     }
 
     function privateActivitiesToggle(e) {
@@ -327,7 +395,20 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 let element = document.getElementById(month_activities[i]['activity_id']);
 
                 // Hide or unhide accordingly
-                element.hidden = e.checked;
+                element.hidden = !e.checked;
+            }
+        }
+    }
+
+    function hiddenActivitiesToggle(e) {
+        for(let i = 0; i < month_activities.length; i++) {
+
+            // If the activity is hidden from Ampll
+            if(month_activities[i]["is_hidden"] === 1) {
+                let element = document.getElementById(month_activities[i]['activity_id']);
+
+                // Hide or unhide accordingly
+                element.hidden = !e.checked;
             }
         }
     }

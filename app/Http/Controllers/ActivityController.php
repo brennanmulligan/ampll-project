@@ -66,4 +66,19 @@ class ActivityController extends Controller
         DB::table('activity')
             ->where('activity_id', $activityID)->delete();
     }
+
+    /**
+     * Hides an activity from Ampll view based on the given id
+     * @param $activityID mixed
+     * @return int
+     */
+    public function toggleActivityHidden(mixed $activityID) {
+        $isHidden = Activity::where("activity_id", "=", $activityID)
+            ->get(["is_hidden"])[0]->is_hidden;
+
+        DB::table('activity')
+            ->where('activity_id', $activityID)->update(['is_hidden' => !$isHidden]);
+
+        return !$isHidden;
+    }
 }
