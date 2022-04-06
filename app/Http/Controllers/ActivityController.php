@@ -55,12 +55,6 @@ class ActivityController extends Controller
                     'private' => $activity->getPrivate()]
             );
         }
-        //when we make changes to an athlete's activities, we also want to update the athlete's refreshed_at var
-        DB::table('athlete')
-            ->updateOrInsert(
-                ['athlete_id' => $athleteID],
-                ['refreshed_at' => time()]
-            );
     }
 
     /**
