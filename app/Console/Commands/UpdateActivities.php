@@ -50,6 +50,9 @@ class UpdateActivities extends Command
         foreach ($athletes as $athlete) {
             if($authController->getValid($athlete->athlete_id)) {
                 $gatewayController->storeActivitiesData($athlete->athlete_id);
+
+                $athleteController = new AthleteController();
+                $athleteController->updateNextSyncTime($athlete->athlete_id, 3600); //Number of seconds in an hour
             }
         }
         $this->info('Successfully got new activities.');
