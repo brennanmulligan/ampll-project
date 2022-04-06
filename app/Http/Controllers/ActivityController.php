@@ -51,7 +51,8 @@ class ActivityController extends Controller
                     'elapsed_time' => $activity->getElapsedTime(), 'distance' => $activity->getDistance(),
                     'total_elevation_gain' => $activity->getTotalElevationGain(),
                     'start_date' => (String)$activity->getStartDate(), 'start_date_local' => (String)$activity->getStartDateLocal(),
-                    'utc_offset' => $activity->getUTCOffset(), 'kudos_count' => $activity->getKudosCount()]
+                    'utc_offset' => $activity->getUTCOffset(), 'kudos_count' => $activity->getKudosCount(),
+                    'private' => $activity->getPrivate()]
             );
         }
         //when we make changes to an athlete's activities, we also want to update the athlete's refreshed_at var

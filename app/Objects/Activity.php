@@ -14,9 +14,10 @@ class Activity
     private $startDateLocal;
     private $UTCOffset;
     private $kudosCount;
+    private $private;
 
     function __construct($id, $name, $type, $elapsedTime = null, $distance = null, $totalElevationGain = null,
-                         $startDate = null, $startDateLocal = null, $UTCOffset = null, $kudosCount = null)
+                         $startDate = null, $startDateLocal = null, $UTCOffset = null, $kudosCount = null, $private = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -28,6 +29,7 @@ class Activity
         $this->startDateLocal = $startDateLocal;
         $this->UTCOffset = $UTCOffset;
         $this->kudosCount = $kudosCount;
+        $this->private = $private;
     }
 
     //Setters not needed because we won't be pushing data to strava
@@ -110,5 +112,10 @@ class Activity
     public function getKudosCount()
     {
         return $this->kudosCount;
+    }
+
+    public function getPrivate()
+    {
+        return $this->private;
     }
 }

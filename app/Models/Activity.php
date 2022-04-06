@@ -27,6 +27,7 @@ class Activity extends Model
         'start_date',
         'start_date_local',
         'utc_offset',
-        'kudos_count'
+        'kudos_count',
+        'private'
     ];
 }
