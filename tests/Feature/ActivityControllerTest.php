@@ -6,6 +6,8 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AthleteController;
 use App\Objects\Activity;
 use App\Objects\Athlete;
+use Database\Seeders\ActivityTableSeeder;
+use Database\Seeders\AthleteTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,30 +15,6 @@ use Tests\TestCase;
 class ActivityControllerTest extends TestCase
 {
     use RefreshDatabase;
-    private Activity $activity1;
-    private Activity $activity2;
-    private Athlete $athlete;
-    private ActivityController $activityController;
-
-    function __construct()
-    {
-        parent::__construct();
-        parent::setUp();
-    }
-
-    protected function setUp(): void {
-        $this->athlete = new Athlete('37134971', 'scotbooker', 'Scott', 'Bucher',
-            'Somewhere', 'Pennsylvania', 'United States', 'M');
-        $this->activity1 = new Activity('5017254429', 'Afternoon Run', 'Run', '1750',
-            '5230.00', '33', '2022-12-14T21:39:47Z', '2022-12-14T17:39:47Z',
-            '-14400', '0');
-        $this->activity2 = new Activity('5017254430', 'Afternoon Run', 'Run', '1800',
-            '5200.00', '30', '2022-12-15T21:39:47Z', '2022-12-15T17:39:47Z',
-            '-14400', '0');
-        $this->activityController = new ActivityController();
-        $athleteController = new AthleteController();
-        $athleteController->addOrUpdate($this->athlete);
-    }
 
     /**
      * Tests that we properly store multiple activites into the DB
@@ -45,21 +23,27 @@ class ActivityControllerTest extends TestCase
      */
     public function testStoreActivities()
     {
-        $activities = [$this->activity1, $this->activity2];
+        $this->seed(AthleteTableSeeder::class);
+        $activityController = new ActivityController();
+        $activity1 = new Activity('5017254429', 'Afternoon Run', 'Run');
+        $activity2 = new Activity('5017254430', 'Afternoon Run', 'Run');
+        $activities = [$activity1, $activity2];
         $this->assertDatabaseMissing('activity', ['activity_id' => '5017254429']);
         $this->assertDatabaseMissing('activity', ['activity_id' => '5017254430']);
-        $this->activityController->storeActivities($this->athlete->getId(), $activities);
+        $activityController->storeActivities('123456789', $activities);
         $this->assertDatabaseHas('activity', ['activity_id' => '5017254429']);
         $this->assertDatabaseHas('activity', ['activity_id' => '5017254430']);
     }
 
     public function testGetAllActivitiesForAthlete() {
-        $activities = [$this->activity1, $this->activity2];
-        $this->assertDatabaseMissing('activity', ['athlete_id' => $this->athlete->getId()]);
-
-        $this->activityController->storeActivities($this->athlete->getId(), $activities);
-
-        $this->assertDatabaseHas('activity', ['activity' => $activities[0]->getId()]);
-        $this->assertDatabaseHas('activity', ['athlete_id' => $activities[1]->getId()]);
+        $this->seed(AthleteTableSeeder::class);
+        $this->seed(ActivityTableSeeder::class);
+        $activityController = new ActivityController();
+        $activities = $activityController->getAllActivityData('123456789');
+        $this->assertNotEmpty($activities);
+        $id1 = $activities[0]->activity_id;
+        $id2 = $activities[1]->activity_id;
+        $this->assertEquals('111111111', $id1);
+        $this->assertEquals('999999999', $id2);
     }
 }
