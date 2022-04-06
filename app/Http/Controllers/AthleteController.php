@@ -53,10 +53,35 @@ class AthleteController extends Controller
      * function that can get all athletes that haven't been refreshed within a certain amount of time
      */
     public function getAthletesBeforeTime($time) {
-        //since refreshed_at is in epoch time, we can just see if it's less than (same as before) the time we send it
         return DB::table('athlete')
             ->select("*")
-            ->where('refreshed_at', '<', $time)
+            ->where('next_sync_at', '<', $time)
             ->get();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     * function to return athletes past their next_sync_time
+     */
+    public function getAthletesToRefresh() {
+        return DB::table('athlete')
+            ->select("*")
+            ->where('next_sync_time', '<', date("Y-m-d H:i:s", time()))
+            ->get();
+    }
+
+    /**
+     * @param mixed $athleteID
+     * @param int $seconds
+     * @return void
+     * Update an athlete's next_sync_time in the standard format
+     */
+    public function updateNextSyncTime(mixed $athleteID, int $seconds) {
+        $new_sync_time = date("Y-m-d H:i:s", time() + $seconds);
+
+        DB::table('athlete')
+            ->select("*")
+            ->where('athlete_id', '=', $athleteID)
+            ->update(['next_sync_time' => $new_sync_time]);
     }
 }

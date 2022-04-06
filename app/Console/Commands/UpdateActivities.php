@@ -42,7 +42,7 @@ class UpdateActivities extends Command
     public function handle()
     {
         $athleteController = new AthleteController();
-        $athletes = $athleteController->getAthletesBeforeTime(time() - config('AppConstants.refresh_time'));
+        $athletes = $athleteController->getAthletesToRefresh();
         $authController = new AuthController();
         // Call database and get all athlete ids which need updated
 
@@ -50,6 +50,9 @@ class UpdateActivities extends Command
         foreach ($athletes as $athlete) {
             if($authController->getValid($athlete->athlete_id)) {
                 $gatewayController->storeActivitiesData($athlete->athlete_id);
+
+                $athleteController = new AthleteController();
+                $athleteController->updateNextSyncTime($athlete->athlete_id, 3600); //Number of seconds in an hour
             }
         }
         $this->info('Successfully got new activities.');

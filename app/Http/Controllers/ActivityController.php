@@ -55,12 +55,6 @@ class ActivityController extends Controller
                     'private' => $activity->getPrivate()]
             );
         }
-        //when we make changes to an athlete's activities, we also want to update the athlete's refreshed_at var
-        DB::table('athlete')
-            ->updateOrInsert(
-                ['athlete_id' => $athleteID],
-                ['refreshed_at' => time()]
-            );
     }
 
     /**
@@ -71,5 +65,20 @@ class ActivityController extends Controller
     public function deleteActivity(mixed $activityID) {
         DB::table('activity')
             ->where('activity_id', $activityID)->delete();
+    }
+
+    /**
+     * Hides an activity from Ampll view based on the given id
+     * @param $activityID mixed
+     * @return int
+     */
+    public function toggleActivityHidden(mixed $activityID) {
+        $isHidden = Activity::where("activity_id", "=", $activityID)
+            ->get(["is_hidden"])[0]->is_hidden;
+
+        DB::table('activity')
+            ->where('activity_id', $activityID)->update(['is_hidden' => !$isHidden]);
+
+        return !$isHidden;
     }
 }
