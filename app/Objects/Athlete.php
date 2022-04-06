@@ -14,8 +14,9 @@ class Athlete
     private $sex;
     private $refreshedAt;
 
-    function __construct($id, $username, $firstName, $lastName, $city, $state, $country, $sex, $refreshedAt = null)
-    {
+    function __construct($id, $username, $firstName = null, $lastName = null, $city = null, $state = null,
+                         $country = null, $sex = null, $refreshedAt = null)
+     {
         $this->id = $id;
         $this->username = $username;
         $this->firstName = $firstName;
