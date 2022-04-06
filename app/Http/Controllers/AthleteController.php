@@ -66,7 +66,7 @@ class AthleteController extends Controller
     public function getAthletesToRefresh() {
         return DB::table('athlete')
             ->select("*")
-            ->where('next_sync_time', '<', time())
+            ->where('next_sync_time', '<', date("Y-m-d H:i:s", time()))
             ->get();
     }
 
