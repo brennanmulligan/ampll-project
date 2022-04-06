@@ -11,29 +11,23 @@ if (isset($_GET["date"])) {
 $calendar = new Calendar($date);
 
 $activityController = new \App\Http\Controllers\ActivityController();
+
+// If activity is set, grab the id, otherwise error to -1
+$sentActivity = $_GET["activity"] ?? -1;
+// Call to update DB
+$sentActivity = $activityController->toggleActivityHidden($sentActivity);
+
 $monthsActivities = $activityController->getMonthActivityData($athlete_id, $date);
 
 $calendar->setActivitiesForCalendar($calendar, $monthsActivities);
 
-if (isset($_GET["activity"])) {
-    $sentActivity = $_GET["activity"] ?? 0;
-
-    // We still have $sentActivity, so update DB
-    $sentActivity = $activityController->toggleActivityHidden($sentActivity);
-
+if (isset($_GET["mode"]) || isset($_GET["activity"])) {
+    // Load an array with the new calendar and activities
     $arr[] = "";
     $arr[0] = $calendar;
     $arr[1] = $monthsActivities;
 
-    echo implode(",,,", $arr); // Loads array into response var
-    exit();
-}
-
-if (isset($_GET["mode"])) {
-    $arr[] = "";
-    $arr[0] = $calendar;
-    $arr[1] = $monthsActivities;
-
+    // Send things back to ajax for redraw
     echo implode(",,,", $arr);
     exit();
 }
@@ -133,7 +127,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
         }
     </style>
 </head>
-<body>s
+<body>
     <a id="backLink" href="{{URL::to('/')}}"><< Back to Landing Page</a>
     <h1>Calendar</h1>
     <p> Welcome back, {{$athlete->first_name}} ({{$athlete_id}})</p>
@@ -176,7 +170,9 @@ $athlete = $athleteController->getAthlete($athlete_id);
 </body>
 </html>
 <script>
-    let month_activities = JSON.parse(<?=count($monthsActivities) == 0 ? 0 : json_encode($monthsActivities)?>);
+    console.log("pre: {{$monthsActivities}}");
+    let month_activities = <?=count($monthsActivities) == 0 ? 0 : json_encode($monthsActivities)?>;
+    console.log("M_A: "+month_activities);
 
     function showMoreActivities(elem, date) {
         let modal = document.getElementById("moreActivities");
@@ -348,8 +344,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
     }
 
     function hideActivity(activity) {
-        console.log("Hide Activity...");
-
+        // TODO migrate this into a function so we don't have two of the same block of code
         let months = {
             "January": 1,       "July": 7,
             "February": 2,      "August": 8,
@@ -364,14 +359,11 @@ $athlete = $athleteController->getAthlete($athlete_id);
         let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
         let date = year.toString() + "-" + tempMonth + "-" + "01";
 
-        //demo demo demo demo
         $.ajax({
             url: window.location.href,
             type: "GET",
             data: {activity: activity.activity_id, date: date}, // Send to the server
             success: function(response) {
-                // console.log("We did it! " + activity.activity_id);
-                // console.log("Response: " + response);
                 ajaxRedraw(response);
             }
         });
@@ -392,19 +384,6 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
             // If the activity is private
             if(month_activities[i]["private"] === 1) {
-                let element = document.getElementById(month_activities[i]['activity_id']);
-
-                // Hide or unhide accordingly
-                element.hidden = !e.checked;
-            }
-        }
-    }
-
-    function hiddenActivitiesToggle(e) {
-        for(let i = 0; i < month_activities.length; i++) {
-
-            // If the activity is hidden from Ampll
-            if(month_activities[i]["is_hidden"] === 1) {
                 let element = document.getElementById(month_activities[i]['activity_id']);
 
                 // Hide or unhide accordingly

@@ -73,6 +73,8 @@ class ActivityController extends Controller
      * @return int
      */
     public function toggleActivityHidden(mixed $activityID) {
+        if($activityID < 0)
+            return null;
         $isHidden = Activity::where("activity_id", "=", $activityID)
             ->get(["is_hidden"])[0]->is_hidden;
 
