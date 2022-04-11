@@ -241,6 +241,9 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 btn.onclick = function() {hideActivity(activity)}; // Assign anonymous function to onclick
                 td1.appendChild(btn);
 
+                //Add an extra column just for alignment
+                row.insertCell();
+
                 // Add a cell for the Strava link
                 let td2 = row.insertCell();
 
