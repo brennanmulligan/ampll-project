@@ -16,7 +16,8 @@ class Activity
     private $kudosCount;
     private $private;
 
-    function __construct($id, $name, $type, $elapsedTime, $distance, $totalElevationGain, $startDate, $startDateLocal, $UTCOffset, $kudosCount, $private)
+    function __construct($id, $name, $type, $elapsedTime = null, $distance = null, $totalElevationGain = null,
+                         $startDate = null, $startDateLocal = null, $UTCOffset = null, $kudosCount = null, $private = null)
     {
         $this->id = $id;
         $this->name = $name;

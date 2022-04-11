@@ -48,18 +48,6 @@ class AthleteController extends Controller
     }
 
     /**
-     * @param $time
-     * @return \Illuminate\Support\Collection
-     * function that can get all athletes that haven't been refreshed within a certain amount of time
-     */
-    public function getAthletesBeforeTime($time) {
-        return DB::table('athlete')
-            ->select("*")
-            ->where('next_sync_at', '<', $time)
-            ->get();
-    }
-
-    /**
      * @return \Illuminate\Support\Collection
      * function to return athletes past their next_sync_time
      */
