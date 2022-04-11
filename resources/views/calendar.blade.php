@@ -240,6 +240,13 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 btn.onclick = function() {hideActivity(activity)}; // Assign anonymous function to onclick
                 td1.appendChild(btn);
 
+                let td2 = row.insertCell();
+
+                let originalLink = document.createElement("a");
+                originalLink.href = "google.com";
+                originalLink.innerHTML = "helllooooo";
+                td2.appendChild(originalLink);
+
                 continue;
             }
 
