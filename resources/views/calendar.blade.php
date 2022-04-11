@@ -243,8 +243,8 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 let td2 = row.insertCell();
 
                 let originalLink = document.createElement("a");
-                originalLink.href = "google.com";
-                originalLink.innerHTML = "helllooooo";
+                originalLink.href = "https://www.strava.com/activities/" + activity.activity_id;
+                originalLink.innerHTML = "View Original";
                 td2.appendChild(originalLink);
 
                 continue;
