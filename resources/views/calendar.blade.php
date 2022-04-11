@@ -231,6 +231,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
             // Manually add the Hide button
             if(rowCount === numRows - 1) {
+                // Add a cell for the show / hide button
                 let td1 = row.insertCell();
 
                 let btn = document.createElement("input");
@@ -240,12 +241,13 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 btn.onclick = function() {hideActivity(activity)}; // Assign anonymous function to onclick
                 td1.appendChild(btn);
 
+                // Add a cell for the Strava link
                 let td2 = row.insertCell();
 
-                let originalLink = document.createElement("a");
-                originalLink.href = "https://www.strava.com/activities/" + activity.activity_id;
-                originalLink.innerHTML = "View Original";
-                td2.appendChild(originalLink);
+                let homeLink = document.createElement("a");
+                homeLink.href = "https://www.strava.com/activities/" + activity.activity_id;
+                homeLink.innerHTML = "View on Strava";
+                td2.appendChild(homeLink);
 
                 continue;
             }
