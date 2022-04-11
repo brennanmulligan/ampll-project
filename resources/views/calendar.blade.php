@@ -46,7 +46,7 @@ $athleteController =  new \App\Http\Controllers\AthleteController();
 $athlete = $athleteController->getAthlete($athlete_id);
 
 ?>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="{{ asset('css/calendar.css') }}" type="text/css">
@@ -101,106 +101,6 @@ $athlete = $athleteController->getAthlete($athlete_id);
                 <div id="activities_content"></div>
             </div>
         </div>
-<<<<<<< HEAD
-=======
-    </div>
-
-    <div id="calendarDIV">
-        <?=$calendar?>
-    </div>
-</body>
-</html>
-<script>
-    console.log("pre: {{$monthsActivities}}");
-    let month_activities = <?=count($monthsActivities) == 0 ? 0 : json_encode($monthsActivities)?>;
-    console.log("M_A: "+month_activities);
-
-    function showMoreActivities(elem, date) {
-        let modal = document.getElementById("moreActivities");
-        let content = document.getElementById("activities_content");
-        let day_activities = [];
-
-        document.getElementById("modal_h2").innerHTML = convertDate(date);
-
-        let hidingPrivate = document.getElementById("hidePrivate").checked;
-
-        if (elem.classList.contains("expand")) {
-            for (let i = 0; i < month_activities.length; i++) {
-                if (month_activities[i].start_date.substring(0, 10) === date) {
-                    if(!hidingPrivate || month_activities[i].private !== 1)
-                        day_activities.push(month_activities[i]);
-                }
-            }
-        } else if (elem.classList.contains("event")) {
-            let found = false;
-            let i = 0;
-
-            while (!found && i < month_activities.length) {
-                if (month_activities[i].activity_id === parseInt(elem.getAttribute("id"))) {
-                    day_activities.push(month_activities[i]);
-                    found = true;
-                }
-
-                i++;
-            }
-        }
-
-        for (let i = 0; i < day_activities.length; i++) {
-            let focus_panel = document.createElement("div");
-            focus_panel.className = "focus_panel";
-
-            focus_panel.appendChild(createTableFromData(day_activities[i]));
-            content.appendChild(focus_panel);
-        }
-
-        modal.classList.remove("fadeOut");
-        modal.classList.add("fadeIn");
-    }
-
-    function createTableFromData(activity) {
-        let table = document.createElement("table");
-        let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos", "Private (Strava)", "Hidden (Ampll)"];
-        let IDs = ["foc_title", "foc_type",  "foc_time", "foc_dist", "foc_elev", "foc_kudos", "foc_private", "foc_hidden"];
-        let arrKeys = ["name", "type", "elapsed_time", "distance", "total_elevation_gain", "kudos_count", "private", "is_hidden"];
-        let locationInArray = 0;
-
-        let numRows = 5;
-        let numCols = 2;
-
-        for (let rowCount = 0; rowCount < numRows; rowCount++) {
-            let row = table.insertRow();
-
-            // Manually add the Hide button
-            if(rowCount === numRows - 1) {
-                // Add a cell for the show / hide button
-                let td1 = row.insertCell();
-
-                let btn = document.createElement("input");
-                btn.type = "button";
-                btn.id = "hideButton";
-                btn.value = "Toggle Hidden";
-                btn.onclick = function() {hideActivity(activity)}; // Assign anonymous function to onclick
-                td1.appendChild(btn);
-
-                //Add an extra column just for alignment
-                row.insertCell();
-
-                // Add a cell for the Strava link
-                let td2 = row.insertCell();
-
-                let homeLink = document.createElement("a");
-                homeLink.href = "https://www.strava.com/activities/" + activity.activity_id;
-                homeLink.innerHTML = "View on Strava";
-                td2.appendChild(homeLink);
-
-                continue;
-            }
-
-            for (let i = 0; i < numCols; i++) {
-                let td1 = row.insertCell();
-                td1.className = "focus";
-                td1.innerHTML = fields[locationInArray] + ": ";
->>>>>>> 33dd112eb04a91a02e2429e8326b64daddda4668
 
         <div id="calendarDIV">
             <?=$calendar?>
