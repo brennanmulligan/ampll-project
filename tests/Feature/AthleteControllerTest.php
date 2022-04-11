@@ -74,12 +74,4 @@ class AthleteControllerTest extends TestCase
         self::assertEquals('123456789', $id1);
         self::assertEquals('987654321', $id2);
     }
-    /**
-     * Test that we can get athletes after a specified refreshed_at time
-     * @return void
-     */
-    public function testGetAthleteAfterTime() {
-        $athleteController = new AthleteController();
-        //changes being made to how we handle time. test will be written after the changes are merged
-    }
 }

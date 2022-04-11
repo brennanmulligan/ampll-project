@@ -28,5 +28,13 @@ class AthleteTableSeeder extends Seeder
             'first_name' => 'Greg',
             'last_name' => 'Jones'
         ]);
+
+        DB::table('athlete')->insert([
+            'athlete_id' => '123123123',
+            'username' => 'tobylerone',
+            'first_name' => 'Toby',
+            'last_name' => 'Lerone',
+
+        ]);
     }
 }
