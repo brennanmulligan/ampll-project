@@ -73,7 +73,6 @@ function createTableFromData(activity) {
 
             let homeLink = document.createElement("a");
             homeLink.href = "https://www.strava.com/activities/" + activity.activity_id;
-            homeLink.innerHTML = "View on Strava";
             homeLink.target = "_blank";
 
             let linkImage = document.createElement("img");
