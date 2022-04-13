@@ -249,7 +249,14 @@ $athlete = $athleteController->getAthlete($athlete_id);
 
                 let homeLink = document.createElement("a");
                 homeLink.href = "https://www.strava.com/activities/" + activity.activity_id;
-                homeLink.innerHTML = "View on Strava";
+                homeLink.target = "_blank";
+
+                let linkImage = document.createElement("img");
+                //<img src="img/ViewOnStrava.jpg" alt="View with Strava"/>
+                linkImage.src = "img/ViewOnStrava.jpg";
+                linkImage.alt = "View On Strava";
+                linkImage.height = 30;
+                homeLink.appendChild(linkImage);
                 td2.appendChild(homeLink);
 
                 continue;
