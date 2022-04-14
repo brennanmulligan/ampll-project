@@ -56,11 +56,11 @@ class Calendar
 
         $html = '<table style="margin: 20px 0" id="calendar">';
         $html .= '<tr style="background-color: #102F38; border: 1px solid black">';
-        $html .= '<th style="border-right: 0px"><button id="prevNext" onclick="changeMonth(false)">⇦</button></th>';
+        $html .= '<th style="border-right: 0px"><button id="prev" onClick="changeMonth(false)">⇦</button></th>';
         $html .= '<th id="header" colspan="5">';
         $html .= date('F Y', strtotime($this->active_year . '-' . $this->active_month . '-' . $this->active_day));
         $html .= '</th>';
-        $html .= '<th style="border-left: 0px"><button id="prevNext" onclick="changeMonth(true)">⇨</button></th>';
+        $html .= '<th style="border-left: 0px"><button id="next" onClick="changeMonth(true)">⇨</button></th>';
         $html .= '<tr>';
 
         foreach ($days as $day) {

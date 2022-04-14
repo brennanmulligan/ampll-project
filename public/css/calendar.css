@@ -15,7 +15,7 @@
     border-right: 0px;
     border-left: 0px;
 }
-#prevNext {
+#prev, #next {
     width: 100%;
     font-size: 30px;
     background: transparent;
@@ -25,7 +25,8 @@
     font-weight: bold;
     transition: all 0.2s ease-out;
 }
-#prevNext:hover {
+#prev:hover,
+#next:hover {
     background-color: #0b2228;
 }
 .day_name {
@@ -165,7 +166,7 @@
 
 #foc_hide {
     font-size: small;
-    font-color: #656565;
+    color: #656565;
 }
 
 #foc_hide:hover {
