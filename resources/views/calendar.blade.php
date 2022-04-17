@@ -5,10 +5,12 @@ $athlete_id = $_GET['athlete_id'] ?? 0;
 
 if (isset($_GET["date"])) {
     $date = $_GET['date'];
+    $getNewMonth = true;
 } else {
     $date = date("Y-m-d");
+    $getNewMonth = false;
 }
-$calendar = new Calendar($date);
+$calendar = new Calendar($getNewMonth, $date);
 
 $activityController = new \App\Http\Controllers\ActivityController();
 
@@ -53,6 +55,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
         <link rel="stylesheet" href="{{ asset('css/interface.css') }}" type="text/css">
         <link rel="stylesheet" href="{{ asset('css/modal_box.css') }}" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="{{ asset('js/app.js') }}" defer></script>
         <script src="{{ asset('js/calendar.js') }}" defer></script>
         <script src="{{ asset('js/CalculateTime.js') }}" defer></script>
 

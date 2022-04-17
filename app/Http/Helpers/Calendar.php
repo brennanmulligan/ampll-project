@@ -4,11 +4,13 @@ namespace App\Http\Helpers;
 class Calendar
 {
 
-    private $active_year, $active_month, $active_day;
-    private $events = [];
+    private string $active_year, $active_month, $active_day;
+    private bool $getNewMonth;
+    private array $events = [];
 
-    public function __construct($date = null)
+    public function __construct($refreshCalendar, $date = null)
     {
+        $this->getNewMonth = $refreshCalendar;
         $this->active_year = $date != null ? date('Y', strtotime($date)) : date('Y');
         $this->active_month = $date != null ? date('m', strtotime($date)) : date('m');
         $this->active_day = $date != null ? date('d', strtotime($date)) : date('d');
@@ -54,24 +56,31 @@ class Calendar
         $first_day_of_week = array_search(date('D', strtotime($this->active_year . '-' . $this->active_month . '-1')), $days);
         $cellNum = 0;
 
-        $html = '<table style="margin: 20px 0" id="calendar">';
-        $html .= '<tr style="background-color: #102F38; border: 1px solid black">';
-        $html .= '<th style="border-right: 0px"><button id="prevNext" onclick="changeMonth(false)">⇦</button></th>';
-        $html .= '<th id="header" colspan="5">';
-        $html .= date('F Y', strtotime($this->active_year . '-' . $this->active_month . '-' . $this->active_day));
-        $html .= '</th>';
-        $html .= '<th style="border-left: 0px"><button id="prevNext" onclick="changeMonth(true)">⇨</button></th>';
-        $html .= '<tr>';
+        $html = "";
 
-        foreach ($days as $day) {
-            $html .= '
-                <td class="day_name">
-                    ' . $day . '
-                </td>
-            ';
+        if (!$this->getNewMonth) {
+            $html = '<table style="margin: 20px 0" id="calendar">' .
+                        '<tr style="background-color: #102F38; border: 1px solid black">' .
+                            '<th id="prevTh" style="border-right: 0px"></th>' .
+                            '<th id="header" colspan="5">' .
+                                date('F Y', strtotime($this->active_year . '-' . $this->active_month . '-' . $this->active_day)) .
+                            '</th>' .
+                            '<th id="nextTh" style="border-left: 0px"></th>' .
+                        '</tr>' .
+                        '<tr>';
+
+            foreach ($days as $day) {
+                $html .= '
+                    <td class="day_name">
+                        ' . $day . '
+                    </td>
+                ';
+            }
+
+            $html .= "</tr>";
         }
 
-        $html .= "</tr><tr>";
+        $html .= "<tr>";
 
         for ($i = $first_day_of_week; $i > 0; $i--) {
             $html .= '
@@ -124,7 +133,9 @@ class Calendar
             $cellNum++;
         }
 
-        for ($i = 1; $i <= (35 - $num_days - max($first_day_of_week, 0)); $i++) {
+        $maxDays = (intval($num_days) + $first_day_of_week) > 35 ? 42 : 35;
+
+        for ($i = 1; $i <= ($maxDays - $num_days - $first_day_of_week); $i++) {
             if ($cellNum == 7) {
                 $html .= "</tr><tr>";
                 $cellNum = 0;
@@ -139,7 +150,11 @@ class Calendar
             $cellNum++;
         }
         $html .= '</tr>';
-        $html .= '</table>';
+
+        if (!$this->getNewMonth) {
+            $html .= '</table>';
+        }
+
         return $html;
     }
 }
