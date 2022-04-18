@@ -22,7 +22,7 @@ class AuthController extends Controller
         $tp = new TokenParser();
 
         // Decrypt the tokens for use
-        $auth->access_token = $tp->decrypt($auth->accesstoken);
+        $auth->access_token = $tp->decrypt($auth->access_token);
         $auth->refresh_token = $tp->decrypt($auth->refresh_token);
 
         return $auth;
