@@ -42,7 +42,7 @@ class Calendar
             else
                 // Any other activities (null, unlabeled, etc) are set to a default color
                 $color = "";
-            $calendar->add_event($activity->name, $activity->start_date, 1, $activity->activity_id, $color);
+            $calendar->add_event($activity->name, $activity->start_date_local, 1, $activity->activity_id, $color);
         }
     }
 
