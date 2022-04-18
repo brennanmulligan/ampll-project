@@ -51,14 +51,36 @@ class ActivityController extends Controller
                     'elapsed_time' => $activity->getElapsedTime(), 'distance' => $activity->getDistance(),
                     'total_elevation_gain' => $activity->getTotalElevationGain(),
                     'start_date' => (String)$activity->getStartDate(), 'start_date_local' => (String)$activity->getStartDateLocal(),
-                    'utc_offset' => $activity->getUTCOffset(), 'kudos_count' => $activity->getKudosCount()]
+                    'utc_offset' => $activity->getUTCOffset(), 'kudos_count' => $activity->getKudosCount(),
+                    'private' => $activity->getPrivate()]
             );
         }
-        //when we make changes to an athlete's activities, we also want to update the athlete's refreshed_at var
-        DB::table('athlete')
-            ->updateOrInsert(
-                ['athlete_id' => $athleteID],
-                ['refreshed_at' => time()]
-            );
+    }
+
+    /**
+     * Delete an activity based on the given id
+     * @param $activityID mixed
+     * @return void
+     */
+    public function deleteActivity(mixed $activityID) {
+        DB::table('activity')
+            ->where('activity_id', $activityID)->delete();
+    }
+
+    /**
+     * Hides an activity from Ampll view based on the given id
+     * @param $activityID mixed
+     * @return int
+     */
+    public function toggleActivityHidden(mixed $activityID) {
+        if($activityID < 0)
+            return null;
+        $isHidden = Activity::where("activity_id", "=", $activityID)
+            ->get(["is_hidden"])[0]->is_hidden;
+
+        DB::table('activity')
+            ->where('activity_id', $activityID)->update(['is_hidden' => !$isHidden]);
+
+        return !$isHidden;
     }
 }

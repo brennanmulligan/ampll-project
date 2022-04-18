@@ -18,11 +18,26 @@ class WebhookController extends Controller
        $json = $request->json()->all();
 
        $data = $jsonParser->parseWebhookData($json);
+       $athleteController = new AthleteController();
+
+        /**
+         * Handle deauth here
+         */
 
         if ($data->getAspectType() == 'create' || $data->getAspectType() == 'update') {
             $gatewayController = new GatewayController();
             if ($data->getObjectType() == 'activity') {
                 $gatewayController->storeActivitiesData($data->getOwnerId());
+                // Delay syncing by a week since push notifications are working (604800 is a week in seconds)
+                $athleteController->updateNextSyncTime($data->getOwnerId(), 604800);
+            }
+        } else if ($data->getAspectType() == 'delete') {
+            // Delete Event
+            if ($data->getObjectType() == 'activity') {
+                $activityController = new ActivityController();
+                $activityController->deleteActivity($data->getObjectId());
+                // Delay syncing by a week since push notifications are working (604800 is a week in seconds)
+                $athleteController->updateNextSyncTime($data->getOwnerId(), 604800);
             }
         }
     }

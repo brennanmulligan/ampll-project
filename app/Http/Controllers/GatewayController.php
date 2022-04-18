@@ -108,15 +108,17 @@ class GatewayController extends Controller
      */
     function refreshData($athleteID)
     {
+        $authController = new AuthController();
         if ($this->storeAthleteData($athleteID) == -1) {
-            $authController = new AuthController();
             $authController->setInvalid($athleteID);
             return -1;
         }
         if ($this->storeActivitiesData($athleteID) == -1) {
-            $authController = new AuthController();
             $authController->setInvalid($athleteID);
             return -1;
+        } else {
+            $athleteController = new AthleteController();
+            $athleteController->updateNextSyncTime($athleteID, 3600); //Number of seconds in an hour
         }
     }
 }

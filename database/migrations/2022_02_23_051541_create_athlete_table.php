@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->char('sex')->nullable();
-            $table->integer('refreshed_at')->nullable();
+            $table->boolean('hide_private_data')->nullable();
+            // Auto set next sync date to one hour from now
+            $table->timestamp('next_sync_time')->default(date("Y-m-d H:i:s", time() + 3600));
             $table->timestamps();
         });
     }
