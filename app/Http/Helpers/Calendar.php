@@ -61,11 +61,11 @@ class Calendar
         if (!$this->getNewMonth) {
             $html = '<table style="margin: 20px 0" id="calendar">' .
                         '<tr style="background-color: #102F38; border: 1px solid black">' .
-                            '<th id="prevTh" style="border-right: 0px"></th>' .
+                            '<th id="prevTh" style="border-right: 0px"><button id="prev" onclick="updateCalendar(getNewDate(false), \'mode=refreshCalendar\')">⇦</button></th>' .
                             '<th id="header" colspan="5">' .
                                 date('F Y', strtotime($this->active_year . '-' . $this->active_month . '-' . $this->active_day)) .
                             '</th>' .
-                            '<th id="nextTh" style="border-left: 0px"></th>' .
+                            '<th id="nextTh" style="border-left: 0px"><button id="next" onclick="updateCalendar(getNewDate(true), \'mode=refreshCalendar\')">⇨</button></th>' .
                         '</tr>' .
                         '<tr>';
 

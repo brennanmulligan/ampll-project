@@ -10,13 +10,9 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.16.11",
-        "@babel/preset-react": "^7.16.7",
         "axios": "^0.25",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14",
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0"
+        "postcss": "^8.1.14"
     }
 }

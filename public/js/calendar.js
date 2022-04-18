@@ -46,32 +46,32 @@ function updateCalendar(date, action) {
     fetch (url, {
         method: "GET",
     })
-        .then(response => response.text())
-        .then(function(data) {
-            data = data.split(",,,");
+    .then(response => response.text())
+    .then(function(data) {
+        data = data.split(",,,");
 
-            let calendar = document.getElementById("calendar");
-            let table = document.createElement("table");
-            table.innerHTML = data[0];
+        let calendar = document.getElementById("calendar");
+        let table = document.createElement("table");
+        table.innerHTML = data[0];
 
-            let tableRows = table.rows;
-            let calendarRows = 2;
+        let tableRows = table.rows;
+        let calendarRows = 2;
 
-            if (tableRows.length > 5) {
-                calendar.appendChild(document.createElement("tr"));
-            } else if (tableRows.length === 5 && calendar.rows.length === 8) {
-                calendar.deleteRow(calendar.rows.length - 1);
-            }
+        if (tableRows.length > 5) {
+            calendar.appendChild(document.createElement("tr"));
+        } else if (tableRows.length === 5 && calendar.rows.length === 8) {
+            calendar.deleteRow(calendar.rows.length - 1);
+        }
 
-            for (let i = 0; i < tableRows.length; i++) {
-                calendar.rows[calendarRows].innerHTML = tableRows[i].innerHTML;
-                calendarRows++;
-            }
+        for (let i = 0; i < tableRows.length; i++) {
+            calendar.rows[calendarRows].innerHTML = tableRows[i].innerHTML;
+            calendarRows++;
+        }
 
-            document.getElementById("header").innerHTML = getMonthAndYear(date);
+        document.getElementById("header").innerHTML = getMonthAndYear(date);
 
-            month_activities = JSON.parse(data[1]);
-        })
+        month_activities = JSON.parse(data[1]);
+    })
 }
 
 function createTableFromData(activity) {
@@ -115,21 +115,19 @@ function createTableFromData(activity) {
             linkImage.height = 30;
             homeLink.appendChild(linkImage);
             td2.appendChild(homeLink);
+        } else {
+            for (let i = 0; i < numCols; i++) {
+                let td1 = row.insertCell();
+                td1.className = "focus";
+                td1.innerHTML = fields[locationInArray] + ": ";
 
-            continue;
-        }
+                let td2 = row.insertCell();
+                td2.className = "info";
+                td2.id = IDs[locationInArray];
+                td2.innerHTML = activity[arrKeys[locationInArray]];
 
-        for (let i = 0; i < numCols; i++) {
-            let td1 = row.insertCell();
-            td1.className = "focus";
-            td1.innerHTML = fields[locationInArray] + ": ";
-
-            let td2 = row.insertCell();
-            td2.className = "info";
-            td2.id = IDs[locationInArray];
-            td2.innerHTML = activity[arrKeys[locationInArray]];
-
-            locationInArray++;
+                locationInArray++;
+            }
         }
     }
 
@@ -179,46 +177,46 @@ function getMonth(type, month) {
     }
 }
 
-function changeMonth(goForward) {
+function getNewDate(goForward) {
     let header = document.getElementById("header");
     let month = getMonth("getNumber", header.innerHTML.substring(0, header.innerHTML.indexOf(" ")));
     let year = parseInt(header.innerHTML.substring(header.innerHTML.indexOf(" ") + 1));
-    // Default for day is 01. This is change if we're switching to the current month and year
+    // Default for day is 01. This will change if we're switching to the current month and year
     let day = "01";
+
+    let padWithZero = (num) => {
+        return (num).toString().padStart(2, "0");
+    }
 
     if (goForward === false) {
         if (month === 1) {
             month = 12;
             year--;
         } else {
-            month--;
+            month = padWithZero(month-1);
         }
     } else {
         if (month === 12) {
-            month = 1;
+            month = padWithZero(1);
             year++;
         } else {
-            month++;
+            month = padWithZero(month+1);
         }
     }
 
     let today = new Date();
-    if (month === (today.getMonth()+1) && year === today.getFullYear()) {
-        day = today.getDate() < 10 ? "0" + today.getDate().toString() : today.getDate().toString();
+    if (parseInt(month) === (today.getMonth()+1) && year === today.getFullYear()) {
+        day = padWithZero(today.getDate());
     }
 
-    let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
-    return year.toString() + "-" + tempMonth + "-" + day;
+    return year.toString() + "-" + month + "-" + day;
 }
 
 function getMonthAndYear(date) {
-    // Date = '2022-03-01'
     let dateMonth = parseInt(date.substring(date.indexOf("-")+1, 7));
     let dateYear = parseInt(date.substring(0, date.indexOf("-")));
 
-    let monthName = getMonth("getName", dateMonth);
-
-    return monthName + " " + dateYear;
+    return getMonth("getName", dateMonth) + " " + dateYear;
 }
 
 function hideActivity(activity) {
@@ -240,7 +238,7 @@ function hideActivity(activity) {
 
 }
 
-function ajaxRedraw(response) {
+/*function ajaxRedraw(response) {
     response = response.split(",,,");
 
     // Updates month_activities for the new calendar
@@ -248,7 +246,7 @@ function ajaxRedraw(response) {
 
     // Redraw the calendar
     document.getElementById("calendarDIV").innerHTML = response[0];
-}
+}*/
 
 function privateActivitiesToggle(e) {
     for(let i = 0; i < month_activities.length; i++) {
