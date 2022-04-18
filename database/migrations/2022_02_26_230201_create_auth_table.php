@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('athlete_id')->primary();
             $table->string('refresh_token');
             $table->string('access_token');
+            $table->string('encryption_iv')->collation('binary');
             $table->integer('valid')->default(1);
             $table->timestamps();
-
 
             // Declare our foreign key
             $table->foreign('athlete_id')->references('athlete_id')->on('athlete')->onDelete('cascade');
