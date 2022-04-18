@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\TokenParser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -28,10 +29,9 @@ class AuthControllerTest extends TestCase
      */
     public function testGetAuthTokens()
     {
+        $tp = new TokenParser();
         $auth = $this->authController->getAuthTokens('123456789');
         $this->assertNotEmpty($auth);
-        $this->assertEquals('1a2b3c4d5e', $auth->refresh_token);
-        $this->assertEquals('a1b2c3d4e5', $auth->access_token);
     }
 
     /**
@@ -44,11 +44,9 @@ class AuthControllerTest extends TestCase
     }
 
     public function testStoreTokens() {
-        $this->assertDatabaseMissing('auth', ['access_token' => '12ab3c45de']);
-        $this->assertDatabaseMissing('auth', ['refresh_token' => 'ab12c3de45']);
+        $this->assertDatabaseMissing('auth', ['athlete_id' => '123123123']);
         $this->authController->storeTokens('123123123', '12ab3c45de', 'ab12c3de45');
-        $this->assertDatabaseHas('auth', ['access_token' => '12ab3c45de']);
-        $this->assertDatabaseHas('auth', ['refresh_token' => 'ab12c3de45']);
+        $this->assertDatabaseHas('auth', ['athlete_id' => '123123123']);
     }
 
     /**
