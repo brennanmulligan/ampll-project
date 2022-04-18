@@ -34,7 +34,7 @@ class ActivityController extends Controller
 
         return Activity::where(function ($query) use ($endDate, $startDate, $athlete_id) {
         $query->where("athlete_id", "=", $athlete_id)
-            ->whereBetween("start_date", [$startDate, $endDate]);
+            ->whereBetween("start_date_local", [$startDate, $endDate]);
             })->get();
     }
 
