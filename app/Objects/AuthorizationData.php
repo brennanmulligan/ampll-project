@@ -7,12 +7,22 @@ class AuthorizationData
     private $accessToken;
     private $refreshToken;
     private $athlete;
+    private string $encryption_iv;
 
-    function __construct($accessToken, $refreshToken, Athlete $athlete)
+    function __construct($accessToken, $refreshToken, Athlete $athlete, string $encryption_iv = null)
     {
         $this->accessToken = $accessToken;
         $this->refreshToken = $refreshToken;
         $this->athlete = $athlete;
+        if (!is_null($encryption_iv)) $this->encryption_iv = $encryption_iv;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncryptionIv(): string
+    {
+        return $this->encryption_iv;
     }
 
     /**

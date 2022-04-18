@@ -19,6 +19,7 @@ class Auth extends Model
         'athlete_id',
         'refresh_token',
         'access_token',
+        'encryption_iv',
         'valid'
     ];
 }
