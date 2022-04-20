@@ -69,9 +69,5 @@ class AthleteControllerTest extends TestCase
         $athleteController = new AthleteController();
         $athletes = $athleteController->getAllAthletes();
         self::assertNotEmpty($athletes);
-        $id1 = $athletes[0]->athlete_id;
-        $id2 = $athletes[1]->athlete_id;
-        self::assertEquals('123456789', $id1);
-        self::assertEquals('987654321', $id2);
     }
 }
