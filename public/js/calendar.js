@@ -40,6 +40,40 @@ function showMoreActivities(elem, date) {
     modal.classList.add("fadeIn");
 }
 
+function updateCalendar(date, action) {
+    let url = window.location.href + "&" + action + "&date=" + date;
+
+    fetch (url, {
+        method: "GET",
+    })
+    .then(response => response.text())
+    .then(function(data) {
+        data = data.split(",,,");
+
+        let calendar = document.getElementById("calendar");
+        let table = document.createElement("table");
+        table.innerHTML = data[0];
+
+        let tableRows = table.rows;
+        let calendarRows = 2;
+
+        if (tableRows.length > 5) {
+            calendar.appendChild(document.createElement("tr"));
+        } else if (tableRows.length === 5 && calendar.rows.length === 8) {
+            calendar.deleteRow(calendar.rows.length - 1);
+        }
+
+        for (let i = 0; i < tableRows.length; i++) {
+            calendar.rows[calendarRows].innerHTML = tableRows[i].innerHTML;
+            calendarRows++;
+        }
+
+        document.getElementById("header").innerHTML = getMonthAndYear(date);
+
+        month_activities = JSON.parse(data[1]);
+    })
+}
+
 function createTableFromData(activity) {
     let table = document.createElement("table");
     let fields = ["Name", "Type", "Time", "Distance", "Elevation", "Kudos", "Private (Strava)", "Hidden (Ampll)"];
@@ -81,21 +115,19 @@ function createTableFromData(activity) {
             linkImage.height = 30;
             homeLink.appendChild(linkImage);
             td2.appendChild(homeLink);
+        } else {
+            for (let i = 0; i < numCols; i++) {
+                let td1 = row.insertCell();
+                td1.className = "focus";
+                td1.innerHTML = fields[locationInArray] + ": ";
 
-            continue;
-        }
+                let td2 = row.insertCell();
+                td2.className = "info";
+                td2.id = IDs[locationInArray];
+                td2.innerHTML = activity[arrKeys[locationInArray]];
 
-        for (let i = 0; i < numCols; i++) {
-            let td1 = row.insertCell();
-            td1.className = "focus";
-            td1.innerHTML = fields[locationInArray] + ": ";
-
-            let td2 = row.insertCell();
-            td2.className = "info";
-            td2.id = IDs[locationInArray];
-            td2.innerHTML = activity[arrKeys[locationInArray]];
-
-            locationInArray++;
+                locationInArray++;
+            }
         }
     }
 
@@ -123,7 +155,13 @@ window.onclick = function(event) {
 }
 
 function convertDate(date) {
-    let months = {
+    let tempDate = date.split("-");
+
+    return getMonth("getName", parseInt(tempDate[1])) + " " + tempDate[2] + ", " + tempDate[0];
+}
+
+function getMonth(type, month) {
+    let monthsArr = {
         1: "January",       7: "July",
         2: "February",      8:"August",
         3: "March",         9: "September",
@@ -131,87 +169,76 @@ function convertDate(date) {
         5: "May",           11: "November",
         6: "June",          12: "December"
     }
-    let tempDate = date.split("-");
 
-    return months[parseInt(tempDate[1])] + " " + tempDate[2] + ", " + tempDate[0];
+    if (type === "getName") {
+        return monthsArr[month];
+    } else if (type === "getNumber") {
+        return parseInt(Object.keys(monthsArr).find(key => monthsArr[key] === month));
+    }
 }
 
-function changeMonth(goForward) {
-    let months = {
-        "January": 1,       "July": 7,
-        "February": 2,      "August": 8,
-        "March": 3,         "September": 9,
-        "April": 4,         "October": 10,
-        "May": 5,           "November": 11,
-        "June": 6,          "December": 12
-    }
+function getNewDate(goForward) {
     let header = document.getElementById("header");
-    let month = months[header.innerHTML.substring(0, header.innerHTML.indexOf(" "))];
+    let month = getMonth("getNumber", header.innerHTML.substring(0, header.innerHTML.indexOf(" ")));
     let year = parseInt(header.innerHTML.substring(header.innerHTML.indexOf(" ") + 1));
-    // Default for day is 01. This is change if we're switching to the current month and year
+    // Default for day is 01. This will change if we're switching to the current month and year
     let day = "01";
+
+    let padWithZero = (num) => {
+        return (num).toString().padStart(2, "0");
+    }
 
     if (goForward === false) {
         if (month === 1) {
             month = 12;
             year--;
         } else {
-            month--;
+            month = padWithZero(month-1);
         }
     } else {
         if (month === 12) {
-            month = 1;
+            month = padWithZero(1);
             year++;
         } else {
-            month++;
+            month = padWithZero(month+1);
         }
     }
 
     let today = new Date();
-    if (month === (today.getMonth()+1) && year === today.getFullYear()) {
-        day = today.getDate() < 10 ? "0" + today.getDate().toString() : today.getDate().toString();
+    if (parseInt(month) === (today.getMonth()+1) && year === today.getFullYear()) {
+        day = padWithZero(today.getDate());
     }
 
-    let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
-    let date = year.toString() + "-" + tempMonth + "-" + day;
+    return year.toString() + "-" + month + "-" + day;
+}
 
-    $.ajax({
-        url: window.location.href,
-        type: "GET",
-        data: {mode: "refreshCalendar", date: date},
-        success: function(response) {
-            ajaxRedraw(response);
-        }
-    });
+function getMonthAndYear(date) {
+    let dateMonth = parseInt(date.substring(date.indexOf("-")+1, 7));
+    let dateYear = parseInt(date.substring(0, date.indexOf("-")));
+
+    return getMonth("getName", dateMonth) + " " + dateYear;
 }
 
 function hideActivity(activity) {
-    // TODO migrate this into a function so we don't have two of the same block of code
-    let months = {
-        "January": 1,       "July": 7,
-        "February": 2,      "August": 8,
-        "March": 3,         "September": 9,
-        "April": 4,         "October": 10,
-        "May": 5,           "November": 11,
-        "June": 6,          "December": 12
-    }
     let header = document.getElementById("header");
-    let month = months[header.innerHTML.substring(0, header.innerHTML.indexOf(" "))];
+    let month = getMonth("getNumber", header.innerHTML.substring(0, header.innerHTML.indexOf(" ")));
     let year = parseInt(header.innerHTML.substring(header.innerHTML.indexOf(" ") + 1));
     let tempMonth = month < 10 ? "0" + month.toString() : month.toString();
     let date = year.toString() + "-" + tempMonth + "-" + "01";
 
-    $.ajax({
+    updateCalendar(date, "activity=" + activity.activity_id);
+    /*$.ajax({
         url: window.location.href,
         type: "GET",
         data: {activity: activity.activity_id, date: date}, // Send to the server
         success: function(response) {
             ajaxRedraw(response);
         }
-    });
+    });*/
+
 }
 
-function ajaxRedraw(response) {
+/*function ajaxRedraw(response) {
     response = response.split(",,,");
 
     // Updates month_activities for the new calendar
@@ -219,7 +246,7 @@ function ajaxRedraw(response) {
 
     // Redraw the calendar
     document.getElementById("calendarDIV").innerHTML = response[0];
-}
+}*/
 
 function privateActivitiesToggle(e) {
     for(let i = 0; i < month_activities.length; i++) {

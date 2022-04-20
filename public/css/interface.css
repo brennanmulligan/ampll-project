@@ -45,7 +45,8 @@ p:not(.content), button:not(#close),
     color: #ECECE6;
 }
 
-input[type="submit"], button:not(#close, #prevNext) {
+input[type="submit"],
+button:not(#close, #prev, #next) {
     background-color: #33a988;
     color: black;
     padding: 10px;
