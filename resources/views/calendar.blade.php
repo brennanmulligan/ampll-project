@@ -18,12 +18,28 @@ $activityController = new \App\Http\Controllers\ActivityController();
 $sentActivity = $_GET["activity"] ?? -1;
 // Call to update DB
 $sentActivity = $activityController->toggleActivityHidden($sentActivity);
+// Handle connectivity
+if (isset($_GET["refresh"]) && $_GET["athlete_id"] != 0) {
+    $gatewayController = new \App\Http\Controllers\GatewayController();
 
+    if ($gatewayController->refreshData($_GET["athlete_id"]) == -1) {
+        header('Location: /login');
+        exit();
+    }// else {
+//        $arr[] = "";
+//        $arr[0] = $calendar;
+//        $arr[1] = $monthsActivities;
+//
+//        // Send things back to ajax for redraw
+//        echo implode(",,,", $arr);
+//        exit();
+//    }
+}
 $monthsActivities = $activityController->getMonthActivityData($athlete_id, $date);
 
 $calendar->setActivitiesForCalendar($calendar, $monthsActivities);
 
-if (isset($_GET["mode"]) || isset($_GET["activity"])) {
+if (isset($_GET["mode"]) || isset($_GET["activity"]) || isset($_GET["refresh"])) {
     // Load an array with the new calendar and activities
     $arr[] = "";
     $arr[0] = $calendar;
@@ -34,15 +50,7 @@ if (isset($_GET["mode"]) || isset($_GET["activity"])) {
     exit();
 }
 
-// Handle connectivity
-if (isset($_GET["refresh"]) && $_GET["athlete_id"] != 0) {
-    $gatewayController = new \App\Http\Controllers\GatewayController();
 
-    if ($gatewayController->refreshData($_GET["athlete_id"]) == -1) {
-        header('Location: /login');
-        exit();
-    }
-}
 
 $athleteController =  new \App\Http\Controllers\AthleteController();
 $athlete = $athleteController->getAthlete($athlete_id);
@@ -68,7 +76,7 @@ $athlete = $athleteController->getAthlete($athlete_id);
             <tbody>
             <tr>
                 <td>
-                    <a href='calendar?athlete_id=<?php echo $athlete_id ?>&refresh=Refresh'>
+                    <a style="cursor: pointer" onclick="updateCalendar('<?php echo $date ?>', 'refresh=Refresh')">
                         <img src="img/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
                     </a>
                 </td>
